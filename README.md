@@ -112,3 +112,7 @@ references/visual-and-qa.md
 > 让材料说明你是谁，而不是让形容词代替材料。
 
 详细规则见 [SKILL.md](./SKILL.md)。
+
+## License
+
+[MIT](./LICENSE)
