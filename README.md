@@ -1,117 +1,160 @@
 # Evidence-First Personal Site
 
-一个用于构建个人网站的 Codex Skill。它把个人网站视为一份可长期维护的公开档案，而不是一张放大版简历，也不是一页用自我评价堆出来的个人宣传页。
+**English | [中文](README.zh-CN.md)**
 
-它的目标是让访问者快速看懂三件事：你做过什么、你留下了哪些可验证的东西、这些经历处于什么状态。
+A skill for AI coding agents (Claude Code, Codex, and others) that builds or revises a personal website as a durable public archive. The site is neither a long resume nor a page of self-description. Visitors should quickly see three things: what you have made, what they can verify, and what state each piece is in.
 
-## 它解决什么
+## What it solves
 
-很多个人网站的问题不是缺少设计，而是缺少边界：
+Most personal sites lack boundaries more than they lack design:
 
-- 项目看起来很多，但访问者不知道哪些仍可访问、哪些已经结束、哪些源码不能公开；
-- 个人介绍写成大量“我很擅长什么”的自我描述，却没有足够事实支撑；
-- 首页试图复述所有内容，结果既不像索引，也不像完整作品集；
-- 为了做出“科技感”加入大标题、渐变、玻璃卡片和 AI 文案，反而遮住了真实材料；
-- 网站做完后无法稳定发布、更新，或不小心暴露了不应公开的工作内容。
+- Many projects, but visitors cannot tell which are live, which have ended, and which have private source.
+- Long passages of "I am good at X" with no evidence next to them.
+- A home page that tries to retell everything, so it is neither an index nor a portfolio.
+- Large headlines, glass cards, and AI-flavored copy that cover the real material.
+- A site that is hard to publish and update, or that exposes work that should not be public.
+- A redesign that starts from a stale local copy, or that drops what the owner had already decided.
 
-这个 Skill 提供一套默认方法：先盘点可公开证据，再组织内容和页面，最后在发布前检查真实状态、图片、移动端与 GitHub Pages 部署。
+The skill gives a default method: inventory what can be public, state two or three things you mainly do and put different evidence under each, write in a plain voice, and check state, images, narrow screens, language, and GitHub Pages before publishing.
 
-## 适合谁
+## Who it is for
 
-- 有项目、文章、开源仓库、研究、产品实践或工作经历，想把它们整理成独立网站的人；
-- 想用 GitHub Pages 长期维护个人档案的人；
-- 想让 Agent 帮忙建站，但不希望它编造经历、滥用 AI 视觉套路的人。
+- People with projects, writing, open-source repositories, research, or work history who want an independent site.
+- People who want to keep a personal archive on GitHub Pages.
+- People who want an agent to help build the site without inventing experience or leaning on generic AI visuals.
+- People who already have a site and feel it is "almost right" but cannot say what is off.
 
-它不适合公司官网、营销落地页，或需要登录、数据库、支付等动态服务的网站。
+It is not for company sites, marketing landing pages, or anything that needs login, a database, or payments.
 
-## 最终会得到什么
+## What you get
 
-默认产物是一个静态 Astro 网站：
-
-```text
-Home        作为索引，帮助访客选择进入哪里
-Projects    展示项目、状态、来源和公开证据
-Writing     展示文章、日期、来源与阅读入口
-About       作为可阅读的事实型简历
-```
-
-不需要四个页面都存在。没有公开文章时可以省去 `Writing`；研究者可以用 `Publications` 替代 `Projects`。原则是保留真实材料，不用空栏目制造完整感。
-
-## 使用方式
-
-将 `evidence-first-personal-site` 文件夹放进 Codex 的 skills 目录，然后在任务中直接说明：
+A static Astro site by default:
 
 ```text
-帮我基于现有简历、项目仓库和两篇文章，做一个个人网站。
-要求：中文为主，公开项目与内部工作严格分开，部署到 GitHub Pages。
+Home        An index that states what you mainly do, with evidence under each
+Projects    Projects, their state, source visibility, and public evidence
+Writing     Articles, dates, provenance, and a reading entry
+About       A factual resume page
 ```
 
-Skill 会先建立一份不公开的材料清单，确认哪些经历、截图、链接和判断可以发布；再确定信息架构与内容模型；最后实现、检查并在获得明确许可后发布。
+You do not need all four. Drop Writing if you have no public writing; a researcher can use Publications instead of Projects. The rule is to keep real material and not to fill space with empty sections.
 
-## 你需要提供的最少材料
+## Install and use
 
-一个可用的第一版只需要：
+Clone the repository into your agent's skills directory.
 
-- 一份可公开的基本信息或简历；
-- 至少两个项目、工作样本或研究产出；
-- 每个公开项目的一条可查看证据，例如产品链接、GitHub 仓库、文章、截图或 demo；
-- 一个公开联系方式。
+For Claude Code:
 
-文章、个人照片、PDF 简历、奖项和完整 case study 都是可选项。没有材料时，Skill 会建议删掉对应栏目，而不是编造内容或放置占位卡片。
+```bash
+git clone https://github.com/alexliu072903-bit/evidence-first-personal-site ~/.claude/skills/evidence-first-personal-site
+```
 
-## 它如何保证内容真实
+For Codex:
 
-每项内容都会按三类处理：
+```bash
+git clone https://github.com/alexliu072903-bit/evidence-first-personal-site ~/.codex/skills/evidence-first-personal-site
+```
 
-| 类型 | 例子 | 处理方式 |
+Then say what you want:
+
+```text
+Build me a personal site from my resume, project repositories, and two articles.
+Chinese first, public work strictly separate from internal work, deploy to GitHub Pages.
+```
+
+or, for an existing site:
+
+```text
+My site feels almost right but I cannot say what is off. Audit it and tell me what you would change before editing.
+```
+
+## The minimum you need to provide
+
+A usable first version needs only:
+
+- A public bio or resume.
+- At least two projects, work samples, or research outputs.
+- One piece of inspectable evidence per public project: a product link, repository, article, screenshot, or demo.
+- A public way to contact you.
+
+Articles, photos, a PDF resume, awards, and full case studies are optional. Without material, the skill suggests dropping the section instead of inventing content.
+
+## How it keeps content honest
+
+Every statement is sorted into one of three kinds:
+
+| Kind | Examples | Handling |
 | --- | --- | --- |
-| 公开事实 | 职位、日期、公开仓库、已发布文章 | 可以直接组织进页面 |
-| 获准的解释 | 你对某个项目做过的具体贡献 | 以你确认过的范围表述 |
-| 私密或未验证内容 | 内部路线图、未发布功能、无法确认的产品状态 | 不发布，或明确写为未知/历史状态 |
+| Public fact | Role, dates, public repository, published article | Can be placed on the page directly |
+| Permitted interpretation | Your specific contribution to a project | Stated within the scope you confirm |
+| Private or unverified | Internal roadmap, unreleased feature, internal numbers, unclear product state | Not published, or labeled unknown or historical |
 
-这意味着它不会把“参与过某件事”自动改写成“主导过某个系统”，也不会把 private source 包装成 open source。
+So it will not turn "took part in" into "led a system", will not present private source as open source, and will not show an employer's internal figures unless you confirm they are public. Numbers appear only with a source and a date.
 
-## 默认的视觉判断
+## Voice
 
-Skill 提供的是阅读效率和可信度的底线，不是强制的视觉品牌：
+The skill writes in a plain, specific voice: say what the visitor can do or see, keep titles short, one sentence for one thing, and let evidence carry the praise. It removes self-endorsement, intensifier words, and stacked "not X but Y" lines. See `references/voice.md` for a table of patterns with replacements.
 
-- 页面标题应当让首屏留给实际信息，而不是占据整个屏幕；
-- 项目截图、公开仓库和文章是主要视觉证据；
-- 个人照片可以提供真实生活感，但不能抢走项目本身的角色；
-- 使用克制的层级、稳定比例和明确的状态标签；
-- 避免渐变文字、玻璃卡片、装饰性大阴影、模板化卡片网格和泛 AI 文案。
+## Visual options
 
-## 包含的内容
+The skill gives a floor for reading and trust, not a brand:
+
+- Leave the first screen for real information.
+- Screenshots, public repositories, and articles are the main visual evidence.
+- Use a clear hierarchy, stable ratios, and plain status labels.
+- Avoid translucent glass cards, gradient text, template card grids, and generic AI copy.
+
+When you have no visual preference, the default is **soft haze**: evidence sits on opaque white tiles, and a very pale haze sits behind the tiles. It will not suit everyone. It is meant as a reasonable starting point for someone with no stronger idea, and it can be replaced as a whole. Three haze SVGs and the parameters are included; see `references/default-style.md`. A plain, flat system is the alternative in `references/visual-and-qa.md`.
+
+## What is inside
 
 ```text
 SKILL.md
-  主流程：证据盘点、信息架构、构建顺序、发布边界
+  Main flow: evidence inventory, revising an existing site, capabilities and
+  evidence, site shape, build order, publishing boundary
 
 references/evidence.md
-  项目、文章、经历和公开边界的材料清单
+  Intake for projects, writing, work history, and public boundaries
+
+references/proof.md
+  Matching capabilities to evidence, rules for numbers, public-reaction
+  screenshots, and employer work
+
+references/voice.md
+  The voice, with a before-and-after pattern table
+
+references/existing-site.md
+  Revising a site: sync with live first, diagnose, learn structure not content
+
+references/bilingual.md
+  Content schema, leaf-node translation, leftover checks
 
 references/astro-foundation.md
-  Astro 内容集合、路由结构和 GitHub Pages 部署约束
+  Astro content collections, routes, and GitHub Pages constraints
 
 references/visual-and-qa.md
-  页面层级、图片、响应式、可访问性和发布前检查
+  The plain visual system, page checks, responsive, accessibility, QA
+
+references/default-style.md + assets/haze/
+  The default soft-haze style: parameters, assets, and how to replace it
 ```
 
-## 发布前的最低检查
+## Checks before publishing
 
-在对外发布前，Skill 要求至少确认：
+Before anything goes public, the skill asks you to confirm at least:
 
-1. 生产构建通过，且草稿不会出现在公开路由中；
-2. 每个项目的当前状态和源码可见性准确；
-3. 本地图片、外部链接、键盘焦点与窄屏文字没有明显问题；
-4. 用户明确确认了公开的仓库、域名和内容边界；
-5. 部署完成后，公开页面实际出现预期的新内容。
+1. The production build passes and drafts are absent from public routes.
+2. Each project's current state and source visibility are accurate.
+3. Local images and external links work; keyboard focus is visible with the real Tab key; text contrast is measured; there is no horizontal overflow at several widths.
+4. For a bilingual site, switching language leaves no leftover text.
+5. You approved the exact repository, domain, and content boundary.
+6. After deployment, the public page really contains the new content.
 
-## 原则
+## Principle
 
-> 让材料说明你是谁，而不是让形容词代替材料。
+> Let the material say who you are, not the adjectives.
 
-详细规则见 [SKILL.md](./SKILL.md)。
+See [SKILL.md](./SKILL.md) for the full rules.
 
 ## License
 

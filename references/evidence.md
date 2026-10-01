@@ -41,4 +41,6 @@ Treat biography as factual modules rather than a personal manifesto:
 - skills only when the person is comfortable having them evaluated publicly;
 - a PDF resume only after the person supplies an approved public version.
 
+Numbers and employer material follow [the proof guide](proof.md): every number has a source and a date, and an employer's internal figures stay out unless the owner confirms they are public.
+
 Personal photographs can humanize a site, but they should not replace professional evidence or reveal someone else's private information.

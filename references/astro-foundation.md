@@ -50,6 +50,20 @@ links:
     url: public URL
 ```
 
+Optional fields that proved useful:
+
+```yaml
+image: optional          # a private project with no public capture should show no image
+facts:                   # up to four figures with a plain label each
+  - { value: 'about 50,000', label: views across two posts }
+factsNote: source and period in one short line
+reactions:               # captures of the owner's own public posts
+  - { image: path, alt: text, caption: text with capture date }
+en:                      # second-language block, see bilingual.md
+  description: string
+  brief: [{ label, text }]
+```
+
 For a concise first read, support an optional `brief` field of two or three labeled rows. It is useful for `Situation`, `Use`, `What remains`, or equivalents. The labels should describe actual information, not fit a decorative universal formula.
 
 ## Writing Contract

@@ -1,6 +1,6 @@
 ---
 name: evidence-first-personal-site
-description: Build or revise a durable personal portfolio site from a person's real projects, writing, and resume evidence. Use when creating a personal website, portfolio, resume site, or GitHub Pages profile; do not use for marketing landing pages or company sites.
+description: Build or revise a durable personal portfolio site from a person's real projects, writing, and resume evidence. Use when creating, redesigning, or auditing a personal website, portfolio, resume site, or GitHub Pages profile, including bilingual sites and work done at a company; do not use for marketing landing pages or company sites.
 ---
 
 # Evidence-First Personal Site
@@ -18,6 +18,22 @@ Before choosing layout or writing copy, create a private source ledger. Read [th
 - **Private or unverified:** internal roadmap, metrics, unpublished feature, client data, uncertain status. Do not publish it.
 
 Ask only for material that is necessary to make an honest first version. A workable minimum is: a short factual bio, two or more projects or work samples, one public link per public project where possible, and a contact method. Do not invent metrics, dates, titles, outcomes, testimonials, or technical implementation details.
+
+## Revising an Existing Site
+
+If a site already exists, do these before designing anything. Read [the existing-site guide](references/existing-site.md).
+
+1. **Compare the working copy with what is live.** A local folder is often behind the deployed branch. Edit a copy of the newest version, never the live directory.
+2. **Diagnose why it feels "almost right".** Name the specific gaps (what a visitor cannot tell in the first screen, which claims have no evidence next to them) before proposing a redesign.
+3. **Learn structure from reference sites, not content.** Take what they make clear, such as strengths stated in the first screen, and leave their wording and projects.
+
+## Lead With What the Person Mainly Does
+
+Home works best when it states two or three things the person mainly does and puts a different piece of public evidence under each one. Read [the proof guide](references/proof.md) for the rules:
+
+- One piece of evidence supports one capability. If two projects tell the same story, keep the stronger one.
+- If a capability has no evidence, say so to the owner. The honest options are to build a project that fills the gap, or to drop the claim. Do not stretch an unrelated project over it.
+- Numbers appear only with a source and a date, and only the two or three most persuasive.
 
 ## Choose the Site Shape
 
@@ -41,7 +57,7 @@ For a new build or a migration, read [the Astro foundation](references/astro-fou
 2. **Reading path:** implement the route that contains the strongest evidence first, usually Projects. On an individual project page, put a compact factual brief before long prose.
 3. **Index pages:** make Home an index of real routes. It should help a visitor choose where to go, not repeat every project description.
 4. **About:** use factual modules and short descriptions. Avoid personality claims such as “visionary”, “rigorous”, or “excellent intuition”.
-5. **Visual system:** use the constrained system in [visual and QA](references/visual-and-qa.md). Images must be evidence, personal context, or a meaningful reading visual; they are not filler.
+5. **Visual system:** ask whether the owner has a visual preference. If so, follow it. If not, offer the default in [default style](references/default-style.md) (a soft haze behind solid evidence tiles) and say that it is a default, not a requirement. The plain system in [visual and QA](references/visual-and-qa.md) is the alternative. Images must be evidence, personal context, or a meaningful reading visual; they are not filler.
 6. **Publish:** build locally, inspect the affected desktop and narrow layouts, then deploy only after the user approves the target repository and public boundary.
 
 ## Content Rules
@@ -52,6 +68,9 @@ For a new build or a migration, read [the Astro foundation](references/astro-fou
 - Preserve provenance for adapted writing. Link the original when it is public and label the relationship plainly.
 - Use the visitor's reading language for body copy. Keep company names, role titles, product names, and technical terms in their native form when that improves accuracy. Do not create awkward mixed-language sentences by default.
 - One decisive image is better than a repeated gallery. Do not reuse the same photo across pages unless repetition is intentionally part of the narrative.
+- Write in the voice described in [voice](references/voice.md): say what the visitor can do or see, keep titles short, one sentence for one thing, and never praise the site's own material.
+- For a bilingual site, put the second language in the content schema and check it, as described in [bilingual](references/bilingual.md). A stub page in the second language is worse than none.
+- Screenshots of social posts, chats, or dashboards show only the owner's own content, cropped to the text and the figures. Remove other people's content, account details, and status bars.
 
 ## Definition of Done
 
@@ -60,5 +79,5 @@ Read [visual and QA](references/visual-and-qa.md) before declaring success. At m
 ## Boundaries
 
 - This is not a résumé-writing skill that fabricates a polished narrative from sparse material.
-- This is not a generic AI-themed landing-page recipe. Do not use gradients, glass cards, stock “future of AI” imagery, invented metrics, or exaggerated founder language as substitutes for evidence.
+- This is not a generic AI-themed landing-page recipe. Do not use translucent glass cards, gradient text, neon, particle fields, stock “future of AI” imagery, invented metrics, or exaggerated founder language as substitutes for evidence. A pale haze behind solid evidence tiles is allowed and is the default option (see [default style](references/default-style.md)).
 - Do not publish, move domains, create repositories, or change public visibility without the user's explicit approval of the exact target.
