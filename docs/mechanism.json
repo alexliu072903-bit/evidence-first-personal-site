@@ -1,0 +1,56 @@
+{
+  "slug": "evidence-first-personal-site-mechanism",
+  "layout": "pipeline",
+  "colors": { "core": "#73c6d4", "coreSoft": "#e8f7f8" },
+  "stages": [
+    {
+      "id": "sources",
+      "icon": "document",
+      "title": { "zh": "真实材料", "en": "REAL SOURCES" },
+      "items": [
+        { "zh": "简历与经历", "en": "Resume and experience" },
+        { "zh": "项目与仓库", "en": "Projects and repositories" },
+        { "zh": "文章与研究", "en": "Writing and research" }
+      ]
+    },
+    {
+      "id": "ledger",
+      "icon": "database",
+      "title": { "zh": "证据清单", "en": "EVIDENCE LEDGER" },
+      "items": [
+        { "zh": "公开事实", "en": "Public facts" },
+        { "zh": "获准的解释", "en": "Permitted interpretation" },
+        { "zh": "私密或未验证", "en": "Private or unverified" }
+      ]
+    },
+    {
+      "id": "boundary",
+      "icon": "select",
+      "title": { "zh": "公开边界", "en": "PUBLIC BOUNDARY" },
+      "items": [
+        { "zh": "用户决定可公开内容", "en": "Owner approves publication" },
+        { "zh": "不确定内容不发布", "en": "Hold uncertain material" }
+      ]
+    },
+    {
+      "id": "contract",
+      "icon": "context",
+      "title": { "zh": "内容契约", "en": "CONTENT CONTRACT" },
+      "items": [
+        { "zh": "状态与来源", "en": "Status and source" },
+        { "zh": "Projects 与 Writing", "en": "Projects and writing" },
+        { "zh": "中英内容对应", "en": "Bilingual content" }
+      ]
+    },
+    {
+      "id": "verify",
+      "icon": "phone",
+      "title": { "zh": "构建与验证", "en": "BUILD & VERIFY" },
+      "items": [
+        { "zh": "静态网站构建", "en": "Build the static site" },
+        { "zh": "窄屏与可访问性", "en": "Check narrow layouts" },
+        { "zh": "上线后再次核验", "en": "Verify the live site" }
+      ]
+    }
+  ]
+}

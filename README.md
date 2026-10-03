@@ -4,6 +4,10 @@
 
 A skill for AI coding agents (Claude Code, Codex, and others) that builds or revises a personal website as a durable public archive. The site is neither a long resume nor a page of self-description. Visitors should quickly see three things: what you have made, what they can verify, and what state each piece is in.
 
+![Evidence-first personal-site mechanism from real sources to a verified public site](docs/assets/mechanism.en.svg)
+
+*Mechanism diagram, not a website screenshot. The owner approves the public boundary before the Agent turns evidence into a content contract and a verified static site. The bilingual source is [`docs/mechanism.json`](docs/mechanism.json).*
+
 ## What it solves
 
 Most personal sites lack boundaries more than they lack design:

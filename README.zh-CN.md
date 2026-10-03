@@ -6,6 +6,10 @@
 
 它的目标是让访问者快速看懂三件事：你做过什么、你留下了哪些可验证的东西、这些经历处于什么状态。
 
+![Evidence-first Personal Site 从真实材料到公开网站验证的机制图](docs/assets/mechanism.zh.svg)
+
+*机制说明图，不是网站截图。用户先确认公开边界，Agent 才把证据整理成内容契约并构建、验证静态网站。双语生成源位于 [`docs/mechanism.json`](docs/mechanism.json)。*
+
 ## 它解决什么
 
 很多个人网站的问题不是缺少设计，而是缺少边界：
