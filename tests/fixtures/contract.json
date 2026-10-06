@@ -9,11 +9,16 @@
     "about": true
   },
   "about": "Mina works on public-interest digital products.",
+  "contact": {
+    "href": "mailto:mina@example.com",
+    "display": "mina@example.com"
+  },
   "labels": {
     "projects": "Projects",
     "writing": "Writing",
     "about": "About",
     "resume": "Resume",
+    "contact": "Contact",
     "skipToContent": "Skip to content",
     "primaryNavigation": "Primary navigation",
     "siteSections": "Site sections",

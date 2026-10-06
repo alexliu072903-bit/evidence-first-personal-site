@@ -16,6 +16,7 @@ a:focus-visible, button:focus-visible { outline: 2px solid currentColor; outline
 .language-toggle { border: 1px solid #9b9e9b; background: #fff; padding: .35rem .6rem; }
 main { min-height: 70vh; padding-block: clamp(3rem, 8vw, 7rem); }
 footer { border-top: 1px solid #d9dbd9; padding-block: 1.5rem; color: #585c58; }
+.site-footer { display: flex; flex-wrap: wrap; gap: .5rem 1.25rem; }
 .route-header { max-width: 44rem; }
 .route-header h1 { font-size: clamp(2.4rem, 7vw, 5rem); line-height: 1; letter-spacing: -.04em; }
 .route-header p { max-width: 60ch; margin-top: 1rem; font-size: 1.1rem; }

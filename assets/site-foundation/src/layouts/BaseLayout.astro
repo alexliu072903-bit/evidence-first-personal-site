@@ -1,6 +1,7 @@
 ---
 import '../styles/reset.css';
 import '../styles/foundation.css';
+import '../styles/skin.css';
 import LanguageToggle from '../components/LanguageToggle.astro';
 import LocalizedText from '../components/LocalizedText.astro';
 import { getPrimaryCopy, labelTranslations, siteCopyTranslations } from '../lib/localization';
@@ -26,6 +27,7 @@ const navigation = [
   site.modules.about && ['about', 'about/'],
 ].filter(Boolean) as string[][];
 const resumeHref = site.resume ? resourcePath(site.resume) : null;
+const contactHref = site.contact?.href ?? null;
 ---
 <!doctype html>
 <html lang={site.primaryLanguage}>
@@ -73,7 +75,18 @@ const resumeHref = site.resume ? resourcePath(site.resume) : null;
       <LanguageToggle />
     </header>
     <main id="main-content"><slot /></main>
-    <footer>© {new Date().getFullYear()} {site.name}</footer>
+    <footer class="site-footer">
+      <span>© {new Date().getFullYear()} {site.name}</span>
+      {contactHref && (
+        <a
+          href={contactHref}
+          aria-label={primaryCopy.labels.contact}
+          data-localized-attribute="aria-label"
+          data-attribute-primary={primaryCopy.labels.contact}
+          data-attribute-translations={JSON.stringify(labelTranslations(site, 'contact'))}
+        >{site.contact.display}</a>
+      )}
+    </footer>
     <script is:inline data-language-config={JSON.stringify({ languages: site.languages, primaryLanguage: site.primaryLanguage })}>
       const languageConfig = JSON.parse(document.currentScript.dataset.languageConfig);
       const { languages, primaryLanguage } = languageConfig;
