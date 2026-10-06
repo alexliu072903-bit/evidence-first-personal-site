@@ -1,0 +1,29 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectLabels from '../../components/ProjectLabels.astro';
+import T from '../../components/T.astro';
+import { contentText } from '../../lib/content-i18n';
+import { ui } from '../../lib/i18n';
+import { sitePath } from '../../lib/paths';
+import site from '../../site.config.mjs';
+
+if (!site.modules.projects) throw new Error('Projects module is disabled; remove this page with new-site.mjs');
+const projects = (await getCollection('projects')).filter((entry) => entry.data.publication === 'public').sort((a, b) => a.data.order - b.data.order);
+---
+<BaseLayout title={ui.projects}>
+  <header class="route-header"><T text={ui.projects} as="h1" /></header>
+  <ol class="project-list">
+    {projects.map((project) => (
+      <li>
+        <a href={sitePath(`projects/${project.id}/`)}>
+          <div>
+            <T text={contentText(project.data.title, project.data.translation?.title, `project ${project.id} title`)} as="h2" />
+            <T text={contentText(project.data.description, project.data.translation?.description, `project ${project.id} description`)} as="p" />
+          </div>
+          <ProjectLabels status={project.data.status} source={project.data.source} />
+        </a>
+      </li>
+    ))}
+  </ol>
+</BaseLayout>

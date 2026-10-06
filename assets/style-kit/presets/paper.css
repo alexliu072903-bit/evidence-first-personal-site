@@ -1,0 +1,44 @@
+/* tokens:start */
+:root {
+  --color-ink: #241f1a;
+  --color-body: #4b433a;
+  --color-muted: #766d63;
+  --color-line: #ddd5ca;
+  --color-page: #f6f1e8;
+  --color-surface: #fbf8f2;
+  --color-accent: #8a5038;
+  --color-accent-ink: #6f3e2d;
+  --tile-bg: #fbf8f2;
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-display: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+  --font-mono: ui-monospace, "SF Mono", monospace;
+  --size-body: 16px;
+  --leading-body: 1.8;
+  --size-h1: clamp(2.4rem, 5vw, 4rem);
+  --size-h2: clamp(1.8rem, 3vw, 2.7rem);
+  --size-title: 27px;
+  --size-small: 13px;
+  --measure: 64ch;
+  --space-entry: 32px;
+  --radius-tile: 2px;
+  --radius-card: 2px;
+  --radius-pill: 2px;
+  --shadow-tile: none;
+  --shadow-card: none;
+  --haze: none;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink: #f0e8db;
+    --color-body: #d0c6b7;
+    --color-muted: #a99e90;
+    --color-line: #4a433a;
+    --color-page: #1c1916;
+    --color-surface: #24201c;
+    --color-accent: #d19a7f;
+    --color-accent-ink: #e0b099;
+    --tile-bg: #24201c;
+  }
+}
+/* tokens:end */

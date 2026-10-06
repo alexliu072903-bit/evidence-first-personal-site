@@ -1,0 +1,17 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import T from '../components/T.astro';
+import { ui } from '../lib/i18n';
+import type { AboutSection } from '../lib/site-types';
+import site from '../site.config.mjs';
+
+if (!site.modules.about) throw new Error('About module is disabled; remove this page with new-site.mjs');
+---
+<BaseLayout title={ui.about} description={site.about.summary}>
+  <article class="about-page">
+    <header class="route-header"><T text={ui.about} as="h1" /><T text={site.about.summary} as="p" where="about summary" /></header>
+    <dl class="about-sections">
+      {site.about.sections.map((section: AboutSection) => <div><dt><T text={section.title} /></dt><dd><T text={section.text} /></dd></div>)}
+    </dl>
+  </article>
+</BaseLayout>

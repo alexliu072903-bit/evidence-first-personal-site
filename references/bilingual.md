@@ -1,21 +1,33 @@
-# Bilingual Sites
+# Chinese–English Sites
 
-This Skill supports Chinese (`zh-CN`) and English (`en`) only. A site may be Chinese-only, English-only, or bilingual. Do not add generic locale routing or accept other language codes.
+Only `zh-CN` and `en` are supported. Either may be primary; the first language in `site.config.mjs` is primary.
 
-## Structure
+## Authoring
 
-- Keep the Chinese-English switch client-side only if the site is static and small; keep content for both languages in the same source.
-- Put the second language in the content schema under `translations.en` or `translations.zh-CN`, depending on the primary language. A public bilingual entry with no complete block for the enabled second language should fail verification rather than show a stub.
-- A page with a single-language long note should say so once ("The full note is currently available in Chinese only") and still show the overview in both languages.
+- A language-independent string is allowed only for names, URLs, identifiers, or terms that genuinely remain the same.
+- Visitor-facing configuration text uses `{ 'zh-CN': '…', en: '…' }`.
+- Project and Writing frontmatter stores primary text at the top level and secondary summaries under `translation`.
+- Status and source labels come from the template dictionary and are not written per project.
+- Long secondary bodies live under `src/content/translations/<collection>/<id>.md`.
+- A bilingual entry with a primary body must have either a translated body or `translation.bodyNote`; otherwise the build fails.
 
-## Implementation
+The Agent creates translations while writing content. Do not call a runtime translation service.
 
-- Put the translation attribute on leaf nodes. A script that replaces `textContent` on a parent erases its children.
-- Provide attributes for non-text content: `aria-label`, `alt`, `href`, and page title/description.
-- Store the language in `localStorage` and accept a `?lang=` parameter. Preserve the language across internal links.
+## Runtime
 
-## QA
+The template renders primary text plus `data-t` attributes on leaf nodes. Translated `alt`, `aria-label`, `href`, and `src` values use matching `data-t-*` attributes. Long bodies use `data-lang-block="primary|secondary"`.
 
-- Switch to the second language on every route and scan the main content for characters of the first language. Names and institutions may stay; everything else should be translated.
-- Check that numbers and approximation words are translated too ("about 50,000", not "约 5 万").
-- Check the document `lang`, the title, and the meta description.
+The client script chooses language in this order:
+
+1. `?lang=` parameter;
+2. saved `localStorage` value;
+3. browser language when supported;
+4. primary language.
+
+It updates text, attributes, title, metadata, body blocks, and internal links without writing language-specific logic into page components.
+
+## Owner review
+
+Before delivery, list every translated title, description, navigation label, link label, image alt text, and body availability note. Ask the owner to sample the most public or sensitive claims. A translation must make the same claim as the primary text; it is not a shorter promotional rewrite.
+
+Run `check-site.mjs --browser`. It clicks the real switch on every route, checks title and links, and scans the secondary view for primary-language residue, excluding the language-independent site name.

@@ -1,0 +1,151 @@
+---
+import '../styles/tokens.css';
+import '../styles/site.css';
+import T from '../components/T.astro';
+import { attr, primary, secondary, tx, ui } from '../lib/i18n';
+import { resourcePath, sitePath } from '../lib/paths';
+import site from '../site.config.mjs';
+import type { Text } from '../lib/site-types';
+
+interface Props {
+  title: Text;
+  description?: Text;
+  pageClass?: string;
+}
+
+const { title, description = site.description, pageClass = '' } = Astro.props;
+const titlePair = tx(title, 'page title');
+const descriptionPair = tx(description, 'meta description');
+const navigation = [
+  site.modules.projects && { text: ui.projects, href: sitePath('projects/') },
+  site.modules.writing && { text: ui.writing, href: sitePath('writing/') },
+  site.modules.about && { text: ui.about, href: sitePath('about/') },
+].filter(Boolean) as Array<{ text: Text; href: string }>;
+const canonicalURL = new URL(Astro.url.pathname, Astro.site);
+const hazeLight = site.style?.hazeLight ? resourcePath(site.style.hazeLight) : '';
+const hazeDark = site.style?.hazeDark ? resourcePath(site.style.hazeDark) : '';
+---
+<!doctype html>
+<html
+  lang={primary}
+  data-primary={primary}
+  data-secondary={secondary}
+  data-title-primary={titlePair.primary}
+  data-title-secondary={titlePair.secondary}
+  data-description-primary={descriptionPair.primary}
+  data-description-secondary={descriptionPair.secondary}
+  style={`--haze-image-light: ${hazeLight ? `url("${hazeLight}")` : 'none'}; --haze-image-dark: ${hazeDark ? `url("${hazeDark}")` : 'none'};`}
+>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={descriptionPair.primary} />
+    <meta property="og:type" content="website" />
+    <meta property="og:title" content={titlePair.primary} />
+    <meta property="og:description" content={descriptionPair.primary} />
+    <meta property="og:url" content={canonicalURL} />
+    <meta property="og:site_name" content={site.name} />
+    <meta name="twitter:card" content="summary" />
+    <meta name="twitter:title" content={titlePair.primary} />
+    <meta name="twitter:description" content={descriptionPair.primary} />
+    <link rel="canonical" href={canonicalURL} />
+    <link rel="icon" href={sitePath('favicon.svg')} type="image/svg+xml" />
+    {site.modules.writing && <link rel="alternate" type="application/rss+xml" title={site.name} href={sitePath('rss.xml')} />}
+    <title>{titlePair.primary}</title>
+  </head>
+  <body class={pageClass}>
+    <a class="skip-link" href="#main-content"><T text={ui.skip} where="skip link" /></a>
+    <header class="site-header">
+      <a class="site-name" href={sitePath()}>{site.name}</a>
+      <nav aria-label="Primary navigation">
+        {navigation.map((item) => <a href={item.href}><T text={item.text} where="navigation" /></a>)}
+        {site.resume && <a href={resourcePath(site.resume.href)}><T text={site.resume.label} where="resume label" /></a>}
+        {secondary && (
+          <button
+            class="language-switch"
+            type="button"
+            data-language-toggle
+            aria-label={tx(ui.switchLanguage).primary}
+            {...attr('aria-label', tx(ui.switchLanguage))}
+          >
+            <span aria-hidden="true">{primary} / {secondary}</span>
+          </button>
+        )}
+      </nav>
+    </header>
+    <main id="main-content"><slot /></main>
+    <footer>
+      <span>© {new Date().getFullYear()} {site.name}</span>
+      {site.contact && <a href={site.contact.href}><T text={site.contact.label} where="contact label" /></a>}
+    </footer>
+    <script is:inline>
+      document.documentElement.classList.add('has-js');
+      const root = document.documentElement;
+      const primary = root.dataset.primary;
+      const secondary = root.dataset.secondary || '';
+      const supported = [primary, secondary].filter(Boolean);
+      const params = new URLSearchParams(window.location.search);
+      const stored = localStorage.getItem('site-language');
+      const browser = navigator.language?.toLowerCase().startsWith('zh') ? 'zh-CN' : 'en';
+      const initial = params.get('lang') || stored || (supported.includes(browser) ? browser : primary);
+      const translatable = document.querySelectorAll('[data-t]');
+      const attributes = ['alt', 'aria-label', 'href', 'src'];
+      const metaDescription = document.querySelector('meta[name="description"]');
+      const ogTitle = document.querySelector('meta[property="og:title"]');
+      const ogDescription = document.querySelector('meta[property="og:description"]');
+      const twitterTitle = document.querySelector('meta[name="twitter:title"]');
+      const twitterDescription = document.querySelector('meta[name="twitter:description"]');
+
+      const setLanguage = (requested, updateUrl = true) => {
+        const language = supported.includes(requested) ? requested : primary;
+        const useSecondary = secondary && language === secondary;
+        root.lang = language;
+        root.dataset.mode = useSecondary ? 'secondary' : 'primary';
+        translatable.forEach((node) => {
+          if (!node.dataset.primaryText) node.dataset.primaryText = node.textContent || '';
+          node.textContent = useSecondary ? node.dataset.t : node.dataset.primaryText;
+        });
+        attributes.forEach((attribute) => {
+          document.querySelectorAll(`[data-t-${attribute}]`).forEach((node) => {
+            const camel = attribute.replace(/(^|-)([a-z])/g, (_match, _dash, letter) => letter.toUpperCase());
+            const primaryKey = `primary${camel}`;
+            const translatedKey = `t${camel}`;
+            if (!node.dataset[primaryKey]) node.dataset[primaryKey] = node.getAttribute(attribute) || '';
+            node.setAttribute(attribute, useSecondary ? node.dataset[translatedKey] : node.dataset[primaryKey]);
+          });
+        });
+        document.querySelectorAll('[data-lang-block]').forEach((node) => {
+          node.hidden = node.dataset.langBlock !== (useSecondary ? 'secondary' : 'primary');
+        });
+        const title = useSecondary ? root.dataset.titleSecondary : root.dataset.titlePrimary;
+        const description = useSecondary ? root.dataset.descriptionSecondary : root.dataset.descriptionPrimary;
+        document.title = title || root.dataset.titlePrimary;
+        if (metaDescription) metaDescription.content = description || root.dataset.descriptionPrimary;
+        if (ogTitle) ogTitle.content = document.title;
+        if (ogDescription) ogDescription.content = metaDescription?.content || '';
+        if (twitterTitle) twitterTitle.content = document.title;
+        if (twitterDescription) twitterDescription.content = metaDescription?.content || '';
+        document.querySelectorAll('a[href]').forEach((link) => {
+          const url = new URL(link.href, window.location.href);
+          if (url.origin === window.location.origin && !url.hash) {
+            if (language === primary) url.searchParams.delete('lang');
+            else url.searchParams.set('lang', language);
+            link.href = url.toString();
+          }
+        });
+        localStorage.setItem('site-language', language);
+        if (updateUrl) {
+          const url = new URL(window.location.href);
+          if (language === primary) url.searchParams.delete('lang');
+          else url.searchParams.set('lang', language);
+          history.replaceState({}, '', url);
+        }
+      };
+
+      setLanguage(initial, true);
+      document.querySelector('[data-language-toggle]')?.addEventListener('click', () => {
+        setLanguage(root.dataset.mode === 'secondary' ? primary : secondary, true);
+      });
+    </script>
+  </body>
+</html>

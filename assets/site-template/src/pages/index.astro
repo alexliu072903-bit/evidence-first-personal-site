@@ -1,0 +1,94 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import ProjectLabels from '../components/ProjectLabels.astro';
+import T from '../components/T.astro';
+import { contentText } from '../lib/content-i18n';
+import { tx, ui } from '../lib/i18n';
+import { sitePath } from '../lib/paths';
+import type { Capability } from '../lib/site-types';
+import site from '../site.config.mjs';
+
+const projects = (await getCollection('projects'))
+  .filter((entry) => entry.data.publication === 'public')
+  .sort((a, b) => a.data.order - b.data.order);
+const writing = (await getCollection('writing'))
+  .filter((entry) => entry.data.publication === 'public')
+  .sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+const projectById = new Map(projects.map((entry) => [entry.id, entry]));
+
+if (site.capabilities.length < 2 || site.capabilities.length > 3) {
+  throw new Error(`Home requires 2–3 capabilities; received ${site.capabilities.length}`);
+}
+const evidenceIds = site.capabilities.map((capability: Capability) => capability.evidence);
+if (new Set(evidenceIds).size !== evidenceIds.length) throw new Error('Each capability must use a different project as evidence');
+for (const id of evidenceIds) {
+  if (!projectById.has(id)) throw new Error(`Capability evidence must reference a public project: ${id}`);
+}
+---
+<BaseLayout title={site.name} description={site.description} pageClass="home-page">
+  <section class:list={['home-hero', { 'home-hero--solo': !site.photo }]}>
+    <div class="home-hero__copy">
+      <h1>{site.name}</h1>
+      <T text={site.description} as="p" where="site description" />
+      <div class="home-hero__actions">
+        {site.modules.projects && <a class="button" href={sitePath('projects/')}><T text={ui.projects} /></a>}
+        {site.modules.about && <a href={sitePath('about/')}><T text={ui.about} /></a>}
+      </div>
+    </div>
+    {site.photo && <img src={sitePath(site.photo.src)} alt={tx(site.photo.alt, 'profile photo alt').primary} data-t-alt={tx(site.photo.alt, 'profile photo alt').secondary} />}
+  </section>
+
+  <section class="home-section" aria-labelledby="capabilities-title">
+    <h2 id="capabilities-title"><T text={{ 'zh-CN': '主要做什么', en: 'What I mainly do' }} /></h2>
+    <div class="capability-list">
+      {site.capabilities.map((capability: Capability) => {
+        const evidence = projectById.get(capability.evidence)!;
+        return (
+          <article>
+            <div>
+              <T text={capability.title} as="h3" where="capability title" />
+              <T text={capability.text} as="p" where="capability text" />
+            </div>
+            <a href={sitePath(`projects/${evidence.id}/`)}>
+              <T text={contentText(evidence.data.title, evidence.data.translation?.title, `project ${evidence.id} title`)} />
+              <span aria-hidden="true"> →</span>
+            </a>
+          </article>
+        );
+      })}
+    </div>
+  </section>
+
+  {site.modules.projects && (
+    <section class="home-section" aria-labelledby="projects-title">
+      <div class="section-head">
+        <h2 id="projects-title"><T text={ui.selectedProjects} /></h2>
+        <a href={sitePath('projects/')}><T text={ui.viewAll} /></a>
+      </div>
+      <ol class="project-list">
+        {projects.slice(0, 4).map((project) => (
+          <li>
+            <a href={sitePath(`projects/${project.id}/`)}>
+              <div>
+                <T text={contentText(project.data.title, project.data.translation?.title, `project ${project.id} title`)} as="h3" />
+                <T text={contentText(project.data.description, project.data.translation?.description, `project ${project.id} description`)} as="p" />
+              </div>
+              <ProjectLabels status={project.data.status} source={project.data.source} />
+            </a>
+          </li>
+        ))}
+      </ol>
+    </section>
+  )}
+
+  {site.modules.writing && writing[0] && (
+    <section class="home-section writing-feature" aria-labelledby="writing-title">
+      <span><T text={ui.latestWriting} /></span>
+      <a href={sitePath(`writing/${writing[0].id}/`)}>
+        <T text={contentText(writing[0].data.title, writing[0].data.translation?.title, `writing ${writing[0].id} title`)} as="h2" />
+        <T text={contentText(writing[0].data.description, writing[0].data.translation?.description, `writing ${writing[0].id} description`)} as="p" />
+      </a>
+    </section>
+  )}
+</BaseLayout>

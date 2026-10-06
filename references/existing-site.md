@@ -1,32 +1,31 @@
-# Revising an Existing Site
+# Existing Site Workflow
 
-## 1. Find the true latest version
+## 1. Capture the live source
 
-The working directory may be behind the deployed repository, and other tools may have edited it. Before changing anything:
+Do not trust a stale local folder. Clone or fetch the deployed repository into a scratch location and compare its commit with any working copy. Do not edit the live checkout.
 
-1. Fetch or clone the deployed repository into a scratch location and compare it with the working directory (`git log` on both, then a file diff).
-2. If the working directory is behind, merge the newer commits into the copy you edit. Use a three-way merge per changed file (`git merge-file`), not a manual re-type.
-3. Never edit the live directory in place. Work in a copy; propose the merge back and wait.
+Run:
 
-Symptoms of a stale base: content the owner remembers is missing, links that exist online are absent, a second article is gone.
+```bash
+node scripts/inventory-site.mjs --url <old-site> --out <private-inventory.json>
+```
 
-## 2. Diagnose before redesigning
+The inventory is raw material, not approved public content. Keep it private.
 
-Write down, in plain words, what a first-time visitor cannot tell in the first screen. Typical gaps:
+## 2. Move the old site into an evidence ledger
 
-- the person's main strengths are implied, not stated;
-- claims and the evidence for them sit far apart;
-- large screenshots are used to fill space;
-- alignment and density are uneven (a column off by a few pixels reads as carelessness).
+Read [evidence](evidence.md). For each old page, project, image, number, and link, decide whether to publish, simplify, hold, or omit. Check current state and public boundary again; existing public text may be stale or overclaiming.
 
-## 3. Learn structure, keep content
+Record which facts came from the live site, repository, resume, or direct owner confirmation. Do not silently carry old claims into the new template.
 
-When the owner gives a reference site, extract what it makes clear (for example, the three things the person does stated at the top), and how. Do not copy its sentences, projects, or visuals. State what you took and what you left.
+## 3. Preserve decisions, not markup
 
-## 4. Respect existing decisions
+Read existing product, design, and content notes. Preserve confirmed public commitments and user-recognizable routes where useful. Extract structural lessons from reference sites, not their copy or visual identity.
 
-Read the repository's product and design notes and content decisions before editing. If your change contradicts one, say so, and let the owner decide which to update. Update the note once decided, with the date.
+Initialize a fresh v1 template in a new directory. Migrate approved content into the new schema. Keep the old site and the new site side by side for comparison; do not overwrite the old checkout.
 
-## 5. Report
+## 4. Confirm style and compare
 
-End with: what changed and why, what was removed, what needs a decision, and how to view it. Do not publish.
+Create an HTML style kit using the migrated material. After confirmation, apply it and run browser checks. Capture old and new homepage screenshots at the same width, and report what changed, what was removed, and why.
+
+Do not publish or redirect the old site without explicit approval of the repository and public boundary.

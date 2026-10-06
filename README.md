@@ -2,170 +2,90 @@
 
 **English | [中文](README.zh-CN.md)**
 
-A skill for AI coding agents (Claude Code, Codex, and others) that builds or revises a personal website as a durable public archive. The site is neither a long resume nor a page of self-description. Visitors should quickly see three things: what you have made, what they can verify, and what state each piece is in.
+A Skill for building or redesigning a personal portfolio as a static Astro site. It does two things:
 
-![Evidence-first personal-site mechanism from real sources to a verified public site](docs/assets/mechanism.en.svg)
+1. provides tested technical infrastructure for projects, writing, About, Chinese–English switching, GitHub Pages, and verification;
+2. requires the owner to confirm an HTML style kit before the final site is generated.
 
-*Mechanism diagram, not a website screenshot. The owner approves the public boundary before the Agent turns evidence into a content contract and a verified static site. The bilingual source is [`docs/mechanism.json`](docs/mechanism.json).*
+Evidence rules remain in the material-intake step so an Agent does not publish private, stale, unsupported, or inflated claims.
 
-## What it solves
-
-Most personal sites lack boundaries more than they lack design:
-
-- Many projects, but visitors cannot tell which are live, which have ended, and which have private source.
-- Long passages of "I am good at X" with no evidence next to them.
-- A home page that tries to retell everything, so it is neither an index nor a portfolio.
-- Large headlines, glass cards, and AI-flavored copy that cover the real material.
-- A site that is hard to publish and update, or that exposes work that should not be public.
-- A redesign that starts from a stale local copy, or that drops what the owner had already decided.
-
-The skill gives a default method: inventory what can be public, state two or three things you mainly do and put different evidence under each, write in a plain voice, and check state, images, narrow screens, language, and GitHub Pages before publishing.
-
-## Who it is for
-
-- People with projects, writing, open-source repositories, research, or work history who want an independent site.
-- People who want to keep a personal archive on GitHub Pages.
-- People who want an agent to help build the site without inventing experience or leaning on generic AI visuals.
-- People who already have a site and feel it is "almost right" but cannot say what is off.
-
-It is not for company sites, marketing landing pages, or anything that needs login, a database, or payments.
-
-## What you get
-
-A static Astro site by default:
+## Workflow
 
 ```text
-Home        An index that states what you mainly do, with evidence under each
-Projects    Projects, their state, source visibility, and public evidence
-Writing     Articles, dates, provenance, and a reading entry
-About       A factual resume page
+collect approved material
+→ confirm the public boundary
+→ render and approve an HTML style kit
+→ generate the Astro site
+→ apply the confirmed tokens
+→ build and check every route
+→ deploy only after explicit approval
 ```
 
-You do not need all four. Drop Writing if you have no public writing; a researcher can use Publications instead of Projects. The rule is to keep real material and not to fill space with empty sections.
+For an existing site, the Skill first inventories the live same-origin pages, moves current material into a private evidence ledger, and migrates only approved content into the new template.
 
-## Install and use
-
-Clone the repository into your agent's skills directory.
-
-For Claude Code:
-
-```bash
-git clone https://github.com/alexliu072903-bit/evidence-first-personal-site ~/.claude/skills/evidence-first-personal-site
-```
-
-For Codex:
-
-```bash
-git clone https://github.com/alexliu072903-bit/evidence-first-personal-site ~/.codex/skills/evidence-first-personal-site
-```
-
-Then say what you want:
+## What is included
 
 ```text
-Build me a personal site from my resume, project repositories, and two articles.
-Chinese first, public work strictly separate from internal work, deploy to GitHub Pages.
-```
-
-or, for an existing site:
-
-```text
-My site feels almost right but I cannot say what is off. Audit it and tell me what you would change before editing.
-```
-
-## The minimum you need to provide
-
-A usable first version needs only:
-
-- A public bio or resume.
-- At least two projects, work samples, or research outputs.
-- One piece of inspectable evidence per public project: a product link, repository, article, screenshot, or demo.
-- A public way to contact you.
-
-Articles, photos, a PDF resume, awards, and full case studies are optional. Without material, the skill suggests dropping the section instead of inventing content.
-
-## How it keeps content honest
-
-Every statement is sorted into one of three kinds:
-
-| Kind | Examples | Handling |
-| --- | --- | --- |
-| Public fact | Role, dates, public repository, published article | Can be placed on the page directly |
-| Permitted interpretation | Your specific contribution to a project | Stated within the scope you confirm |
-| Private or unverified | Internal roadmap, unreleased feature, internal numbers, unclear product state | Not published, or labeled unknown or historical |
-
-So it will not turn "took part in" into "led a system", will not present private source as open source, and will not show an employer's internal figures unless you confirm they are public. Numbers appear only with a source and a date.
-
-## Voice
-
-The skill writes in a plain, specific voice: say what the visitor can do or see, keep titles short, one sentence for one thing, and let evidence carry the praise. It removes self-endorsement, intensifier words, and stacked "not X but Y" lines. See `references/voice.md` for a table of patterns with replacements.
-
-## Visual options
-
-The skill gives a floor for reading and trust, not a brand:
-
-- Leave the first screen for real information.
-- Screenshots, public repositories, and articles are the main visual evidence.
-- Use a clear hierarchy, stable ratios, and plain status labels.
-- Avoid translucent glass cards, gradient text, template card grids, and generic AI copy.
-
-When you have no visual preference, the default is **soft haze**: evidence sits on opaque white tiles, and a very pale haze sits behind the tiles. It will not suit everyone. It is meant as a reasonable starting point for someone with no stronger idea, and it can be replaced as a whole. Three haze SVGs and the parameters are included; see `references/default-style.md`. A plain, flat system is the alternative in `references/visual-and-qa.md`.
-
-## What is inside
-
-```text
-SKILL.md
-  Main flow: evidence inventory, revising an existing site, capabilities and
-  evidence, site shape, build order, publishing boundary
-
-references/evidence.md
-  Intake for projects, writing, work history, and public boundaries
-
-references/proof.md
-  Matching capabilities to evidence, rules for numbers, public-reaction
-  screenshots, and employer work
-
-references/voice.md
-  The voice, with a before-and-after pattern table
-
+SKILL.md                 Workflow router
+references/evidence.md   Evidence ledger and public boundaries
+references/new-site.md   New-site workflow
 references/existing-site.md
-  Revising a site: sync with live first, diagnose, learn structure not content
-
-references/bilingual.md
-  Chinese-English content schema, leaf-node translation, leftover checks
-
-references/astro-foundation.md
-  Astro content collections, routes, and GitHub Pages constraints
-
-references/visual-and-qa.md
-  The plain visual system, page checks, responsive, accessibility, QA
-
-references/default-style.md + assets/haze/
-  The default soft-haze style: parameters, assets, and how to replace it
-
-references/site-foundation.md + assets/site-foundation/
-  A skin-free Astro foundation initialized from an approved site contract
-
-scripts/init-site.mjs + scripts/verify-site.mjs + scripts/browser-qa.mjs
-  Deterministic initialization, artifact verification, and multi-width browser QA
+                         Existing-site inventory and migration
+references/bilingual.md  Chinese–English authoring and runtime
+references/style-kit.md  Style questions, HTML confirmation, token transfer
+references/voice.md      Evidence-led copy
+references/qa.md         Content, browser, and delivery checks
+assets/site-template/    De-personalized Astro template
+assets/style-kit/        HTML template, Soft Haze and Paper presets
+scripts/new-site.mjs     Initialize a site in an empty directory
+scripts/apply-style.mjs  Transfer confirmed tokens and textures
+scripts/check-site.mjs   Static, browser, and optional external checks
+scripts/inventory-site.mjs
+                         Capture same-origin material from an old site
 ```
 
-## Checks before publishing
+## Quick start
 
-Before anything goes public, the skill asks you to confirm at least:
+After installing the Skill, ask an Agent:
 
-1. The production build passes and drafts are absent from public routes.
-2. Each project's current state and source visibility are accurate.
-3. Local images and external links work; keyboard focus is visible with the real Tab key; text contrast is measured; there is no horizontal overflow at several widths.
-4. For a bilingual site, switching language leaves no leftover text.
-5. You approved the exact repository, domain, and content boundary.
-6. After deployment, the public page really contains the new content.
+```text
+Build a personal site from my approved resume, projects, articles, and photos.
+Chinese first, with English. Keep company work and private source clearly labelled.
+Show me the HTML style kit before generating the final site.
+```
 
-## Principle
+The Agent will create a private ledger and a style-kit preview before writing the site. It will not publish, create a repository, or enable deployment without approval of the exact target.
 
-> Let the material say who you are, not the adjectives.
+## Infrastructure
 
-See [SKILL.md](./SKILL.md) for the full rules.
+The generated template uses Astro 7.3.5 with static output, explicit Projects and Writing routes, content collections, RSS, sitemap, and GitHub Pages base-path support. The homepage requires two or three capabilities, each backed by a different public project.
+
+Only Chinese (`zh-CN`) and English (`en`) are supported. Translations are generated during authoring and checked at build and browser time; no runtime translation service is used.
+
+## Style kits
+
+The two starting presets are deliberately limited:
+
+- **Soft Haze**: restrained textured field, opaque floating tile, sans-serif typography;
+- **Paper**: warm flat page, serif display typography, rules instead of shadows.
+
+They are starting points, not a theme library. The accent color, real-page preview, and writing examples must come from the owner. A confirmed token block is copied unchanged into the site, and the complete kit remains in the generated repository.
+
+## Verification
+
+```bash
+node scripts/check-site.mjs --site /path/to/site --browser
+```
+
+The checker builds the site, validates internal assets and routes, prevents draft leakage, clicks the language switch, checks focus and overflow at desktop and mobile widths, and stores screenshots plus a JSON report in `qa/`.
+
+## Boundaries
+
+- Personal portfolios only; not company sites or campaign landing pages.
+- No CMS, comments, analytics, custom-domain work, or languages beyond Chinese and English.
+- No private screenshots, internal metrics, invented results, or copied third-party prose.
+- Deployment is added only after the owner approves the repository and public boundary.
 
 ## License
 
-[MIT](./LICENSE)
+[MIT](LICENSE)

@@ -1,0 +1,146 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>林安 / Lan Lin · Paper 风格包</title>
+<style>
+/* tokens:start */
+:root {
+  --color-ink: #241f1a;
+  --color-body: #4b433a;
+  --color-muted: #766d63;
+  --color-line: #ddd5ca;
+  --color-page: #f6f1e8;
+  --color-surface: #fbf8f2;
+  --color-accent: #74516f;
+  --color-accent-ink: #573b53;
+  --tile-bg: #fbf8f2;
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-display: Georgia, "Songti SC", "Noto Serif CJK SC", serif;
+  --font-mono: ui-monospace, "SF Mono", monospace;
+  --size-body: 16px;
+  --leading-body: 1.8;
+  --size-h1: clamp(2.4rem, 5vw, 4rem);
+  --size-h2: clamp(1.8rem, 3vw, 2.7rem);
+  --size-title: 27px;
+  --size-small: 13px;
+  --measure: 64ch;
+  --space-entry: 32px;
+  --radius-tile: 2px;
+  --radius-card: 2px;
+  --radius-pill: 2px;
+  --shadow-tile: none;
+  --shadow-card: none;
+  --haze: none;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink: #f0e8db;
+    --color-body: #d0c6b7;
+    --color-muted: #a99e90;
+    --color-line: #4a433a;
+    --color-page: #1c1916;
+    --color-surface: #24201c;
+    --color-accent: #c4a0bd;
+    --color-accent-ink: #d9bad3;
+    --tile-bg: #24201c;
+  }
+}
+/* tokens:end */
+
+* { box-sizing: border-box; }
+:root { --haze-image-light: url('hero-template.light.svg'); --haze-image-dark: url('hero-template.dark.svg'); }
+body { margin: 0; color: var(--color-ink); background: var(--color-page); font: var(--size-body)/var(--leading-body) var(--font-sans); -webkit-font-smoothing: antialiased; }
+main { width: min(calc(100% - 2rem), 64rem); margin-inline: auto; padding-block: 3.5rem 7rem; }
+h1, h2, h3, p { margin-top: 0; }
+h1 { margin-bottom: .5rem; font: 650 var(--size-h1)/1.08 var(--font-display); letter-spacing: -.025em; }
+h2 { margin: 4.5rem 0 .4rem; font: 620 var(--size-h2)/1.15 var(--font-display); letter-spacing: -.02em; }
+h3 { font: 700 var(--size-title)/1.3 var(--font-display); }
+p { max-width: var(--measure); color: var(--color-body); }
+.lead, .sub { color: var(--color-muted); }
+.sub { margin-bottom: 1.3rem; font-size: 14px; }
+.card { padding: 1.4rem; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.grid { display: grid; gap: 1rem; }
+.g2 { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+.palette-row { display: grid; grid-template-columns: 2.5rem 9rem 1fr; gap: .8rem; align-items: center; padding-block: .7rem; border-top: 1px solid var(--color-line); }
+.palette-row:first-child { border-top: 0; }
+.swatch { width: 2.25rem; height: 2.25rem; border: 1px solid var(--color-line); border-radius: .5rem; }
+.palette-row span:last-child { color: var(--color-muted); }
+.hero-preview { padding: 2.5rem; background-color: var(--color-surface); background-image: var(--haze); background-position: center; background-size: cover; border-radius: var(--radius-tile); }
+.floating { display: grid; width: 7rem; height: 7rem; place-items: center; margin-inline: auto; background: var(--tile-bg); border-radius: var(--radius-tile); box-shadow: var(--shadow-tile); font-size: 2rem; font-weight: 700; }
+.illustration { display: grid; min-height: 14rem; place-items: center; background-color: var(--color-surface); background-image: var(--haze); background-position: center; background-size: cover; border-radius: var(--radius-card); }
+.illustration-element { display: grid; width: 7rem; height: 7rem; place-items: center; background: var(--tile-bg); border-radius: 1.6rem; box-shadow: var(--shadow-tile); }
+.illustration-element svg { width: 3.4rem; color: var(--color-accent-ink); }
+table { width: 100%; border-collapse: collapse; }
+th { padding: 0 1rem .5rem 0; color: var(--color-muted); font-size: 12px; font-weight: 500; text-align: left; }
+td { padding: .75rem 1rem .75rem 0; color: var(--color-body); border-top: 1px solid var(--color-line); vertical-align: top; }
+td:first-child { color: var(--color-ink); font-weight: 600; white-space: nowrap; }
+.writing-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+.writing-pair > div { padding: 1rem; border-radius: var(--radius-card); }
+.writing-pair .no { color: #712f28; background: #fff2f0; border: 1px solid #f0d0cc; }
+.writing-pair .yes { color: #1f513e; background: #eef8f2; border: 1px solid #cde6d7; }
+.writing-pair strong { display: block; margin-bottom: .35rem; font-size: 12px; }
+.page-preview { overflow: hidden; background: var(--color-surface); border: 1px solid var(--color-line); border-radius: var(--radius-card); box-shadow: var(--shadow-card); }
+.preview-hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 2rem; align-items: center; padding: 2.5rem; background-color: var(--color-surface); background-image: var(--haze); background-position: center; background-size: cover; }
+.preview-hero h3 { margin-bottom: .7rem; font-size: clamp(2rem, 5vw, 3.4rem); }
+.preview-hero p { margin-bottom: 0; }
+.preview-tile { padding: 1.2rem; background: var(--tile-bg); border-radius: var(--radius-tile); box-shadow: var(--shadow-tile); }
+.preview-project { display: grid; grid-template-columns: 1fr auto; gap: 1.5rem; align-items: start; padding: var(--space-entry); border-top: 1px solid var(--color-line); }
+.preview-project h3 { margin-bottom: .4rem; }
+.pill { padding: .25rem .55rem; color: var(--color-muted); border: 1px solid var(--color-line); border-radius: var(--radius-pill); font-size: var(--size-small); }
+.boundary { padding: 1rem 1.2rem; color: var(--color-body); background: var(--color-surface); border-left: 3px solid var(--color-accent); }
+code { font: 13px/1.5 var(--font-mono); }
+@media (max-width: 44rem) { .g2, .writing-pair, .preview-hero, .preview-project { grid-template-columns: 1fr; } .palette-row { grid-template-columns: 2.5rem 1fr; } .palette-row span:last-child { grid-column: 2; } }
+</style>
+</head>
+<body>
+<main>
+  <h1>林安 / Lan Lin · Paper 风格包</h1>
+  <p class="lead">暖白纸面、衬线标题、细线分隔，加一处低饱和梅紫作为无障碍研究内容的识别色。</p>
+  <p class="sub">把占位内容换成用户的名字、能力和真实项目；用户明确说“确认”后，再运行 apply-style.mjs。</p>
+
+  <h2>1. 配色</h2>
+  <p class="sub">中性色负责阅读；自定义梅紫只用于链接、焦点与少数关键状态，不承担大面积装饰。</p>
+  <div class="card">
+    <div class="palette-row"><i class="swatch" style="background:var(--color-ink)"></i><b>标题</b><span><code>--color-ink</code></span></div>
+    <div class="palette-row"><i class="swatch" style="background:var(--color-body)"></i><b>正文</b><span><code>--color-body</code></span></div>
+    <div class="palette-row"><i class="swatch" style="background:var(--color-muted)"></i><b>次要文字</b><span><code>--color-muted</code></span></div>
+    <div class="palette-row"><i class="swatch" style="background:var(--color-line)"></i><b>分隔线</b><span><code>--color-line</code></span></div>
+    <div class="palette-row"><i class="swatch" style="background:var(--color-page)"></i><b>页面</b><span><code>--color-page</code></span></div>
+    <div class="palette-row"><i class="swatch" style="background:var(--color-accent)"></i><b>强调色</b><span><code>--color-accent</code></span></div>
+  </div>
+
+  <h2>2. 背景和悬浮元素</h2>
+  <p class="sub">一屏最多使用一层底纹和一个悬浮元素。运行文本始终放在不透明 surface 上。</p>
+  <div class="hero-preview"><div class="floating">Aa</div></div>
+
+  <h2>3. 配图画法</h2>
+  <p class="sub">画布 1000×400；一张图只放一个代表“这件事在手上是什么”的元素；线宽 4.5–5.5；强调色最多一处。</p>
+  <div class="illustration">
+    <div class="illustration-element" aria-label="单元素插画示例">
+      <svg viewBox="0 0 64 64" fill="none" stroke="currentColor" stroke-width="5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M14 18h36M14 32h24M14 46h30"/><circle cx="47" cy="32" r="5" fill="currentColor" stroke="none"/></svg>
+    </div>
+  </div>
+  <div class="card" style="margin-top:1rem"><table><tr><th>规则</th><th>取值</th></tr><tr><td>画布</td><td>1000×400，四周保留大面积空白。</td></tr><tr><td>元素</td><td>线条图标、简单文字或一两个色块，只表达一件事。</td></tr><tr><td>来源</td><td>优先使用 Phosphor 图标路径（MIT）；不使用第三方品牌图形。</td></tr><tr><td>检查</td><td>浅色和暗色分别渲染检查。</td></tr></table></div>
+
+  <h2>4. 排版</h2>
+  <div class="card"><table><tr><th>用途</th><th>Token</th><th>当前值</th></tr><tr><td>正文</td><td><code>--size-body</code> / <code>--leading-body</code></td><td>16px / 1.8</td></tr><tr><td>页面标题</td><td><code>--size-h1</code></td><td>2.4–4rem</td></tr><tr><td>条目标题</td><td><code>--size-title</code></td><td>27px</td></tr><tr><td>阅读宽度</td><td><code>--measure</code></td><td>64ch</td></tr><tr><td>条目间距</td><td><code>--space-entry</code></td><td>32px</td></tr></table></div>
+
+  <h2>5. 文字写法</h2>
+  <p class="sub">下面必须使用用户自己的材料重写。站在读者角度，一句话只讲一件事。</p>
+  <div class="writing-pair"><div class="no"><strong>不这样写</strong>我致力于用创新方法创造包容、卓越的无障碍体验。</div><div class="yes"><strong>这样写</strong>我观察真实任务，再把发现写成团队可以检查的无障碍条件。</div></div>
+  <div class="card" style="margin-top:1rem"><table><tr><th>规则</th><th>写法</th></tr><tr><td>开头</td><td>先说访客能理解或检查什么。</td></tr><tr><td>一句一事</td><td>长句拆开，不用形容词堆出可信度。</td></tr><tr><td>数字</td><td>只有存在来源和时间时才使用。</td></tr><tr><td>不确定</td><td>标出来请用户确认，不补成完整故事。</td></tr></table></div>
+
+  <h2>6. 真实页面预览</h2>
+  <p class="sub">这是确认时最重要的部分。替换成用户的真实名字、一项能力和一个项目。</p>
+  <section class="page-preview">
+    <div class="preview-hero"><div><h3>林安 Lan Lin</h3><p>把无障碍研究整理成团队能直接使用的产品判断。</p></div><div class="preview-tile"><b>让路线可理解</b><p>把复杂空间拆成读屏和低视力用户都能确认的下一步。</p></div></div>
+    <div class="preview-project"><div><h3>无障碍路线图</h3><p>把公共空间里的转向、地标和确认点整理成可逐步核对的路线。</p></div><span class="pill">可查看</span></div>
+  </section>
+
+  <h2>7. 不要带走的东西</h2>
+  <div class="boundary">不要带入第三方品牌、别人的原文、未确认的指标，或与个人网站无关的发版规则。强调色、示例文案和页面预览都必须换成用户自己的材料。</div>
+</main>
+</body>
+</html>

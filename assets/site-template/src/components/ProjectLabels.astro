@@ -1,0 +1,15 @@
+---
+import T from './T.astro';
+import { sourceLabels, statusLabels } from '../lib/i18n';
+
+interface Props {
+  status: keyof typeof statusLabels;
+  source: keyof typeof sourceLabels;
+}
+
+const { status, source } = Astro.props;
+---
+<div class="project-labels">
+  <span><T text={statusLabels[status]} where="project status" /></span>
+  <span><T text={sourceLabels[source]} where="source visibility" /></span>
+</div>
