@@ -6,6 +6,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const supportedLanguages = new Set(['zh-CN', 'en']);
 const labelKeys = [
   'projects', 'writing', 'about', 'resume', 'skipToContent', 'primaryNavigation',
   'siteSections', 'changeLanguage', 'situation', 'contribution', 'currentState',
@@ -29,10 +30,18 @@ function validateContract(contract) {
   if (!contract?.name?.trim()) errors.push('name is required');
   if (!contract?.description?.trim()) errors.push('description is required');
   if (!contract?.primaryLanguage?.trim()) errors.push('primaryLanguage is required');
+  else if (!supportedLanguages.has(contract.primaryLanguage)) errors.push('primaryLanguage must be zh-CN or en');
   if (!Array.isArray(contract?.languages) || contract.languages.length === 0) {
     errors.push('languages must contain at least the primary language');
   } else if (!contract.languages.includes(contract.primaryLanguage)) {
     errors.push('languages must include primaryLanguage');
+  }
+  for (const language of contract?.languages ?? []) {
+    if (!supportedLanguages.has(language)) errors.push(`unsupported language ${language}; only zh-CN and en are supported`);
+  }
+  for (const language of Object.keys(contract?.translations ?? {})) {
+    if (!supportedLanguages.has(language)) errors.push(`unsupported translation ${language}; only zh-CN and en are supported`);
+    if (!contract?.languages?.includes(language)) errors.push(`translations.${language} is present but ${language} is not enabled`);
   }
   for (const module of ['projects', 'writing', 'about']) {
     if (typeof contract?.modules?.[module] !== 'boolean') errors.push(`modules.${module} must be true or false`);

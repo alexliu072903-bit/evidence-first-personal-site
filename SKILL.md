@@ -85,7 +85,7 @@ For a new site whose public boundary and modules are already clear, read [the si
 - Use the visitor's reading language for body copy. Keep company names, role titles, product names, and technical terms in their native form when that improves accuracy. Do not create awkward mixed-language sentences by default.
 - One decisive image is better than a repeated gallery. Do not reuse the same photo across pages unless repetition is intentionally part of the narrative.
 - Write in the voice described in [voice](references/voice.md): say what the visitor can do or see, keep titles short, one sentence for one thing, and never praise the site's own material.
-- For a bilingual site, put the second language in the content schema and check it, as described in [bilingual](references/bilingual.md). A stub page in the second language is worse than none.
+- For a Chinese-English bilingual site, put the second language in the content schema and check it, as described in [bilingual](references/bilingual.md). This Skill supports `zh-CN` and `en` only. A stub page in the second language is worse than none.
 - Screenshots of social posts, chats, or dashboards show only the owner's own content, cropped to the text and the figures. Remove other people's content, account details, and status bars.
 
 ## Definition of Done

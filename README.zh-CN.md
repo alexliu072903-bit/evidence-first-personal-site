@@ -130,7 +130,7 @@ references/existing-site.md
   修改已有网站：先和线上同步、先诊断、学结构不抄内容、尊重已有决定
 
 references/bilingual.md
-  双语站点：内容结构、叶子节点翻译、切换后的残留检查
+  中英双语站点：内容结构、叶子节点翻译、切换后的残留检查
 
 references/site-foundation.md + assets/site-foundation/
   从已确认 Site Contract 初始化的、无品牌视觉的 Astro Foundation

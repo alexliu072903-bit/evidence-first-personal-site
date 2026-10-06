@@ -19,6 +19,16 @@ const writingTranslation = z.object({
   bodyNote: z.string(),
 });
 
+const bilingualProjectTranslations = z.object({
+  'zh-CN': projectTranslation.optional(),
+  en: projectTranslation.optional(),
+}).strict();
+
+const bilingualWritingTranslations = z.object({
+  'zh-CN': writingTranslation.optional(),
+  en: writingTranslation.optional(),
+}).strict();
+
 const projects = defineCollection({
   loader: glob({ pattern: '**/*.{md,mdx}', base: './src/content/projects' }),
   schema: z.object({
@@ -34,7 +44,7 @@ const projects = defineCollection({
     image: z.string().optional(),
     imageAlt: z.string().optional(),
     links: z.array(z.object({ label: z.string(), url: z.url() })).default([]),
-    translations: z.record(z.string(), projectTranslation).optional(),
+    translations: bilingualProjectTranslations.optional(),
   }).superRefine((value, context) => {
     if (value.image && !value.imageAlt) {
       context.addIssue({ code: 'custom', path: ['imageAlt'], message: 'imageAlt is required when image is present' });
@@ -54,7 +64,7 @@ const writing = defineCollection({
       url: z.url(),
       note: z.string(),
     }).optional(),
-    translations: z.record(z.string(), writingTranslation).optional(),
+    translations: bilingualWritingTranslations.optional(),
   }),
 });
 

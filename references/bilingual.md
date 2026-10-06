@@ -1,9 +1,11 @@
 # Bilingual Sites
 
+This Skill supports Chinese (`zh-CN`) and English (`en`) only. A site may be Chinese-only, English-only, or bilingual. Do not add generic locale routing or accept other language codes.
+
 ## Structure
 
-- Keep the language switch client-side only if the site is static and small; keep content for both languages in the same source.
-- Put the second language in the content schema: `en.description`, `en.brief`, `en.imageAlt`, `en.evidenceCaption`, and so on. A project with no `en` block should fail the build or show no stub.
+- Keep the Chinese-English switch client-side only if the site is static and small; keep content for both languages in the same source.
+- Put the second language in the content schema under `translations.en` or `translations.zh-CN`, depending on the primary language. A public bilingual entry with no complete block for the enabled second language should fail verification rather than show a stub.
 - A page with a single-language long note should say so once ("The full note is currently available in Chinese only") and still show the overview in both languages.
 
 ## Implementation

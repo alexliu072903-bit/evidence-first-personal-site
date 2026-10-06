@@ -40,7 +40,7 @@ node scripts/init-site.mjs --contract /path/to/site-contract.json --output /path
 
 The contract declares identity, languages, enabled modules, an optional factual About summary, interface labels, and deployment mode. The initializer refuses to overwrite a non-empty directory and does not apply a branded skin.
 
-For more than one language, the contract must provide a complete site description, About text when enabled, and every interface label for each secondary language. Project and Writing entries provide complete translated overviews in their `translations` block. A long note may remain in the primary language, but its secondary-language overview must include a `bodyNote` that says so; the primary-language body is hidden rather than presented as a translation.
+The foundation supports Chinese (`zh-CN`) and English (`en`) only: either language may be primary, and a site may use one or both. Other language codes fail initialization. For a bilingual site, the contract must provide a complete site description, About text when enabled, and every interface label for the secondary language. Project and Writing entries provide complete translated overviews in their `translations` block. A long note may remain in the primary language, but its secondary-language overview must include a `bodyNote` that says so; the primary-language body is hidden rather than presented as a translation.
 
 ## Verify
 

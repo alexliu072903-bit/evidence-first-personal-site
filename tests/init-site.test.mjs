@@ -41,6 +41,19 @@ test('requires complete site copy for every enabled language', async () => {
   assert.match(result.stderr, /translations\.zh-CN\.labels\.currentState is required/);
 });
 
+test('accepts only Chinese and English language contracts', async () => {
+  const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-language-'));
+  const unsupported = JSON.parse(await readFile(bilingualContract, 'utf8'));
+  unsupported.languages.push('ja');
+  unsupported.translations.ja = unsupported.translations['zh-CN'];
+  const unsupportedPath = path.join(parent, 'unsupported.json');
+  await writeFile(unsupportedPath, JSON.stringify(unsupported));
+  const output = path.join(parent, 'site');
+  const result = spawnSync(process.execPath, [init, '--contract', unsupportedPath, '--output', output], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /only zh-CN and en are supported/);
+});
+
 test('refuses to overwrite a non-empty directory', async () => {
   const output = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-nonempty-'));
   await writeFile(path.join(output, 'keep.txt'), 'keep');

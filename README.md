@@ -131,7 +131,7 @@ references/existing-site.md
   Revising a site: sync with live first, diagnose, learn structure not content
 
 references/bilingual.md
-  Content schema, leaf-node translation, leftover checks
+  Chinese-English content schema, leaf-node translation, leftover checks
 
 references/astro-foundation.md
   Astro content collections, routes, and GitHub Pages constraints
