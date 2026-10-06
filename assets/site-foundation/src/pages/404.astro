@@ -1,0 +1,13 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LocalizedText from '../components/LocalizedText.astro';
+import { getPrimaryCopy, labelTranslations } from '../lib/localization';
+import site from '../site.config.mjs';
+const primaryCopy = getPrimaryCopy(site);
+---
+<BaseLayout title={primaryCopy.labels.notFound} titleTranslations={labelTranslations(site, 'notFound')}>
+  <header class="route-header">
+    <LocalizedText as="h1" primary={primaryCopy.labels.notFound} translations={labelTranslations(site, 'notFound')} />
+    <LocalizedText as="p" primary={primaryCopy.labels.notFoundDescription} translations={labelTranslations(site, 'notFoundDescription')} />
+  </header>
+</BaseLayout>

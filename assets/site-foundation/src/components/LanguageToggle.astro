@@ -1,0 +1,19 @@
+---
+import site from '../site.config.mjs';
+import { getPrimaryCopy, labelTranslations } from '../lib/localization';
+const enabled = site.languages.length > 1;
+const primaryLabel = getPrimaryCopy(site).labels.changeLanguage;
+---
+{enabled && (
+  <button
+    class="language-toggle"
+    type="button"
+    data-language-toggle
+    aria-label={primaryLabel}
+    data-localized-attribute="aria-label"
+    data-attribute-primary={primaryLabel}
+    data-attribute-translations={JSON.stringify(labelTranslations(site, 'changeLanguage'))}
+  >
+    {site.languages.join(' / ')}
+  </button>
+)}

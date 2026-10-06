@@ -131,7 +131,7 @@ references/existing-site.md
   Revising a site: sync with live first, diagnose, learn structure not content
 
 references/bilingual.md
-  Content schema, leaf-node translation, leftover checks
+  Chinese-English content schema, leaf-node translation, leftover checks
 
 references/astro-foundation.md
   Astro content collections, routes, and GitHub Pages constraints
@@ -141,6 +141,12 @@ references/visual-and-qa.md
 
 references/default-style.md + assets/haze/
   The default soft-haze style: parameters, assets, and how to replace it
+
+references/site-foundation.md + assets/site-foundation/
+  A skin-free Astro foundation initialized from an approved site contract
+
+scripts/init-site.mjs + scripts/verify-site.mjs + scripts/browser-qa.mjs
+  Deterministic initialization, artifact verification, and multi-width browser QA
 ```
 
 ## Checks before publishing

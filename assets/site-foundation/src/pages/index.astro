@@ -1,0 +1,34 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import LocalizedText from '../components/LocalizedText.astro';
+import { getPrimaryCopy, labelTranslations, siteCopyTranslations } from '../lib/localization';
+import { sitePath } from '../lib/paths';
+import site from '../site.config.mjs';
+const primaryCopy = getPrimaryCopy(site);
+const destinations = [
+  site.modules.projects && ['projects', 'projects/'],
+  site.modules.writing && ['writing', 'writing/'],
+  site.modules.about && ['about', 'about/'],
+].filter(Boolean) as string[][];
+---
+<BaseLayout>
+  <header class="route-header">
+    <h1>{site.name}</h1>
+    <LocalizedText as="p" primary={primaryCopy.description} translations={siteCopyTranslations(site, 'description')} />
+  </header>
+  {destinations.length > 0 && (
+    <nav
+      class="route-index"
+      aria-label={primaryCopy.labels.siteSections}
+      data-localized-attribute="aria-label"
+      data-attribute-primary={primaryCopy.labels.siteSections}
+      data-attribute-translations={JSON.stringify(labelTranslations(site, 'siteSections'))}
+    >
+      {destinations.map(([key, target]) => (
+        <a href={sitePath(target)}>
+          <LocalizedText primary={primaryCopy.labels[key]} translations={labelTranslations(site, key)} />
+        </a>
+      ))}
+    </nav>
+  )}
+</BaseLayout>

@@ -1,0 +1,34 @@
+{
+  "name": "Mina Chen",
+  "description": "Selected product work and writing.",
+  "primaryLanguage": "en",
+  "languages": ["en"],
+  "modules": {
+    "projects": true,
+    "writing": false,
+    "about": true
+  },
+  "about": "Mina works on public-interest digital products.",
+  "labels": {
+    "projects": "Projects",
+    "writing": "Writing",
+    "about": "About",
+    "resume": "Resume",
+    "skipToContent": "Skip to content",
+    "primaryNavigation": "Primary navigation",
+    "siteSections": "Site sections",
+    "changeLanguage": "Change language",
+    "situation": "Situation",
+    "contribution": "Contribution",
+    "currentState": "Current state",
+    "notFound": "Not found",
+    "notFoundDescription": "This page does not exist.",
+    "sourceOpen": "Open source",
+    "sourcePrivate": "Private source",
+    "sourceMixed": "Mixed visibility",
+    "sourceNotApplicable": "Source not applicable"
+  },
+  "deployment": {
+    "mode": "local"
+  }
+}

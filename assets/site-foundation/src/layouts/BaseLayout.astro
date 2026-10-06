@@ -1,0 +1,121 @@
+---
+import '../styles/reset.css';
+import '../styles/foundation.css';
+import LanguageToggle from '../components/LanguageToggle.astro';
+import LocalizedText from '../components/LocalizedText.astro';
+import { getPrimaryCopy, labelTranslations, siteCopyTranslations } from '../lib/localization';
+import { resourcePath, sitePath } from '../lib/paths';
+import site from '../site.config.mjs';
+
+interface Props {
+  title?: string;
+  titleTranslations?: Record<string, string | undefined>;
+  description?: string;
+  descriptionTranslations?: Record<string, string | undefined>;
+}
+const primaryCopy = getPrimaryCopy(site);
+const {
+  title = site.name,
+  titleTranslations = {},
+  description = primaryCopy.description,
+  descriptionTranslations = siteCopyTranslations(site, 'description'),
+} = Astro.props;
+const navigation = [
+  site.modules.projects && ['projects', 'projects/'],
+  site.modules.writing && ['writing', 'writing/'],
+  site.modules.about && ['about', 'about/'],
+].filter(Boolean) as string[][];
+const resumeHref = site.resume ? resourcePath(site.resume) : null;
+---
+<!doctype html>
+<html lang={site.primaryLanguage}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta
+      name="description"
+      content={description}
+      data-localized-attribute="content"
+      data-attribute-primary={description}
+      data-attribute-translations={JSON.stringify(descriptionTranslations)}
+    />
+    <link rel="icon" href={sitePath('favicon.svg')} type="image/svg+xml" />
+    <title
+      data-localized
+      data-localized-optional={Object.keys(titleTranslations).length === 0 ? '' : undefined}
+      data-primary={title}
+      data-translations={JSON.stringify(titleTranslations)}
+    >{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">
+      <LocalizedText primary={primaryCopy.labels.skipToContent} translations={labelTranslations(site, 'skipToContent')} />
+    </a>
+    <header class="site-header">
+      <a class="site-name" href={sitePath()}>{site.name}</a>
+      <nav
+        aria-label={primaryCopy.labels.primaryNavigation}
+        data-localized-attribute="aria-label"
+        data-attribute-primary={primaryCopy.labels.primaryNavigation}
+        data-attribute-translations={JSON.stringify(labelTranslations(site, 'primaryNavigation'))}
+      >
+        {navigation.map(([key, target]) => (
+          <a href={sitePath(target)}>
+            <LocalizedText primary={primaryCopy.labels[key]} translations={labelTranslations(site, key)} />
+          </a>
+        ))}
+        {resumeHref && (
+          <a href={resumeHref}>
+            <LocalizedText primary={primaryCopy.labels.resume} translations={labelTranslations(site, 'resume')} />
+          </a>
+        )}
+      </nav>
+      <LanguageToggle />
+    </header>
+    <main id="main-content"><slot /></main>
+    <footer>© {new Date().getFullYear()} {site.name}</footer>
+    <script is:inline data-language-config={JSON.stringify({ languages: site.languages, primaryLanguage: site.primaryLanguage })}>
+      const languageConfig = JSON.parse(document.currentScript.dataset.languageConfig);
+      const { languages, primaryLanguage } = languageConfig;
+      const params = new URLSearchParams(window.location.search);
+      const stored = localStorage.getItem('site-language');
+      const requested = params.get('lang') || stored || primaryLanguage;
+      const language = languages.includes(requested) ? requested : primaryLanguage;
+      document.documentElement.lang = language;
+      document.documentElement.dataset.languageMode = language === primaryLanguage ? 'primary' : 'secondary';
+      localStorage.setItem('site-language', language);
+
+      for (const node of document.querySelectorAll('[data-localized]')) {
+        const translations = JSON.parse(node.dataset.translations || '{}');
+        node.textContent = language === primaryLanguage ? node.dataset.primary : translations[language] || node.dataset.primary;
+      }
+
+      for (const node of document.querySelectorAll('[data-localized-attribute]')) {
+        const attribute = node.dataset.localizedAttribute;
+        const translations = JSON.parse(node.dataset.attributeTranslations || '{}');
+        const value = language === primaryLanguage
+          ? node.dataset.attributePrimary
+          : translations[language] || node.dataset.attributePrimary;
+        node.setAttribute(attribute, value);
+      }
+
+      for (const link of document.querySelectorAll('a[href]')) {
+        const url = new URL(link.href, window.location.href);
+        if (url.origin === window.location.origin && language !== primaryLanguage) {
+          url.searchParams.set('lang', language);
+          link.href = url.toString();
+        }
+      }
+
+      document.querySelector('[data-language-toggle]')?.addEventListener('click', () => {
+        const index = languages.indexOf(language);
+        const next = languages[(index + 1) % languages.length];
+        const url = new URL(window.location.href);
+        if (next === primaryLanguage) url.searchParams.delete('lang');
+        else url.searchParams.set('lang', next);
+        localStorage.setItem('site-language', next);
+        window.location.assign(url.toString());
+      });
+    </script>
+  </body>
+</html>
