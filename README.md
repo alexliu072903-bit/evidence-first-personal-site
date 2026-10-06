@@ -141,6 +141,12 @@ references/visual-and-qa.md
 
 references/default-style.md + assets/haze/
   The default soft-haze style: parameters, assets, and how to replace it
+
+references/site-foundation.md + assets/site-foundation/
+  A skin-free Astro foundation initialized from an approved site contract
+
+scripts/init-site.mjs + scripts/verify-site.mjs
+  Deterministic initialization and core artifact verification
 ```
 
 ## Checks before publishing

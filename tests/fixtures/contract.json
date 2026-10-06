@@ -1,0 +1,15 @@
+{
+  "name": "Mina Chen",
+  "description": "Selected product work and writing.",
+  "primaryLanguage": "en",
+  "languages": ["en"],
+  "modules": {
+    "projects": true,
+    "writing": false,
+    "about": true
+  },
+  "about": "Mina works on public-interest digital products.",
+  "deployment": {
+    "mode": "local"
+  }
+}

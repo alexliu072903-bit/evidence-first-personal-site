@@ -1,0 +1,11 @@
+---
+const labels: Record<string, string> = {
+  open: 'Open source',
+  private: 'Private source',
+  mixed: 'Mixed visibility',
+  'not-applicable': 'Source not applicable',
+};
+interface Props { value: keyof typeof labels }
+const { value } = Astro.props;
+---
+<span class="fact-label">{labels[value]}</span>

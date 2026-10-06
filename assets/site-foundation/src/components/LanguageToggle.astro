@@ -1,0 +1,9 @@
+---
+import site from '../site.config.mjs';
+const enabled = site.languages.length > 1;
+---
+{enabled && (
+  <button class="language-toggle" type="button" data-language-toggle aria-label="Change language">
+    {site.languages.join(' / ')}
+  </button>
+)}

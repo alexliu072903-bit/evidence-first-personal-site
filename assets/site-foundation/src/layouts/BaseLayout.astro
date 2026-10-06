@@ -1,0 +1,71 @@
+---
+import '../styles/reset.css';
+import '../styles/foundation.css';
+import LanguageToggle from '../components/LanguageToggle.astro';
+import { sitePath } from '../lib/paths';
+import site from '../site.config.mjs';
+
+interface Props { title?: string; description?: string }
+const { title = site.name, description = site.description } = Astro.props;
+const navigation = [
+  site.modules.projects && ['Projects', 'projects/'],
+  site.modules.writing && ['Writing', 'writing/'],
+  site.modules.about && ['About', 'about/'],
+].filter(Boolean) as string[][];
+---
+<!doctype html>
+<html lang={site.primaryLanguage}>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width" />
+    <meta name="description" content={description} data-site-description />
+    <link rel="icon" href={sitePath('favicon.svg')} type="image/svg+xml" />
+    <title>{title}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">Skip to content</a>
+    <header class="site-header">
+      <a class="site-name" href={sitePath()}>{site.name}</a>
+      <nav aria-label="Primary navigation">
+        {navigation.map(([label, target]) => <a href={sitePath(target)}>{label}</a>)}
+        {site.resume && <a href={site.resume}>Resume</a>}
+      </nav>
+      <LanguageToggle />
+    </header>
+    <main id="main-content"><slot /></main>
+    <footer>© {new Date().getFullYear()} {site.name}</footer>
+    <script is:inline data-language-config={JSON.stringify({ languages: site.languages, primaryLanguage: site.primaryLanguage })}>
+      const languageConfig = JSON.parse(document.currentScript.dataset.languageConfig);
+      const { languages, primaryLanguage } = languageConfig;
+      const params = new URLSearchParams(window.location.search);
+      const stored = localStorage.getItem('site-language');
+      const requested = params.get('lang') || stored || primaryLanguage;
+      const language = languages.includes(requested) ? requested : primaryLanguage;
+      document.documentElement.lang = language;
+      localStorage.setItem('site-language', language);
+
+      for (const node of document.querySelectorAll('[data-localized]')) {
+        const translations = JSON.parse(node.dataset.translations || '{}');
+        node.textContent = language === primaryLanguage ? node.dataset.primary : translations[language] || node.dataset.primary;
+      }
+
+      for (const link of document.querySelectorAll('a[href]')) {
+        const url = new URL(link.href, window.location.href);
+        if (url.origin === window.location.origin && language !== primaryLanguage) {
+          url.searchParams.set('lang', language);
+          link.href = url.toString();
+        }
+      }
+
+      document.querySelector('[data-language-toggle]')?.addEventListener('click', () => {
+        const index = languages.indexOf(language);
+        const next = languages[(index + 1) % languages.length];
+        const url = new URL(window.location.href);
+        if (next === primaryLanguage) url.searchParams.delete('lang');
+        else url.searchParams.set('lang', next);
+        localStorage.setItem('site-language', next);
+        window.location.assign(url.toString());
+      });
+    </script>
+  </body>
+</html>

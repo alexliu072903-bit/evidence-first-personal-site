@@ -1,0 +1,92 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import EvidenceAsset from '../components/EvidenceAsset.astro';
+import SourceLabel from '../components/SourceLabel.astro';
+import StatusLabel from '../components/StatusLabel.astro';
+import { sitePath } from '../lib/paths';
+import site from '../site.config.mjs';
+
+export async function getStaticPaths() {
+  const paths: Array<{ params: { path: string }; props: Record<string, unknown> }> = [];
+  const projects = (await getCollection('projects')).filter((entry) => entry.data.publication === 'public');
+  const writing = (await getCollection('writing')).filter((entry) => entry.data.publication === 'public');
+  if (site.modules.projects) {
+    paths.push({ params: { path: 'projects' }, props: { kind: 'projects-index', entries: projects } });
+    for (const entry of projects) paths.push({ params: { path: `projects/${entry.id}` }, props: { kind: 'project', entry } });
+  }
+  if (site.modules.writing) {
+    paths.push({ params: { path: 'writing' }, props: { kind: 'writing-index', entries: writing } });
+    for (const entry of writing) paths.push({ params: { path: `writing/${entry.id}` }, props: { kind: 'writing', entry } });
+  }
+  if (site.modules.about) paths.push({ params: { path: 'about' }, props: { kind: 'about' } });
+  return paths;
+}
+
+type Project = CollectionEntry<'projects'>;
+type Writing = CollectionEntry<'writing'>;
+type PageProps =
+  | { kind: 'projects-index'; entries: Project[] }
+  | { kind: 'project'; entry: Project }
+  | { kind: 'writing-index'; entries: Writing[] }
+  | { kind: 'writing'; entry: Writing }
+  | { kind: 'about' };
+
+const props = Astro.props as PageProps;
+let Content;
+if (props.kind === 'project' || props.kind === 'writing') Content = (await render(props.entry)).Content;
+const pageTitle = props.kind === 'project' || props.kind === 'writing'
+  ? `${props.entry.data.title} — ${site.name}`
+  : site.name;
+---
+<BaseLayout title={pageTitle}>
+  {props.kind === 'projects-index' && (
+    <>
+      <header class="route-header"><h1>Projects</h1></header>
+      <ol class="entry-list">
+        {[...props.entries].sort((a, b) => a.data.order - b.data.order).map((project) => (
+          <li>
+            <a href={sitePath(`projects/${project.id}/`)}>{project.data.title}</a>
+            <p>{project.data.description}</p>
+            <div class="fact-row"><StatusLabel value={project.data.status} /><SourceLabel value={project.data.source} /></div>
+          </li>
+        ))}
+      </ol>
+    </>
+  )}
+  {props.kind === 'project' && (
+    <article>
+      <header class="route-header">
+        <div class="fact-row"><StatusLabel value={props.entry.data.status} /><SourceLabel value={props.entry.data.source} /></div>
+        <h1>{props.entry.data.title}</h1>
+        <p>{props.entry.data.description}</p>
+      </header>
+      <dl class="project-brief">
+        <div><dt>Situation</dt><dd>{props.entry.data.problem}</dd></div>
+        <div><dt>Contribution</dt><dd>{props.entry.data.contribution}</dd></div>
+        <div><dt>Current state</dt><dd>{props.entry.data.current}</dd></div>
+      </dl>
+      {props.entry.data.image && <EvidenceAsset src={props.entry.data.image} alt={props.entry.data.imageAlt!} />}
+      {Content && <div class="prose"><Content /></div>}
+    </article>
+  )}
+  {props.kind === 'writing-index' && (
+    <>
+      <header class="route-header"><h1>Writing</h1></header>
+      <ol class="entry-list">
+        {[...props.entries].sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()).map((item) => (
+          <li><a href={sitePath(`writing/${item.id}/`)}>{item.data.title}</a><p>{item.data.description}</p></li>
+        ))}
+      </ol>
+    </>
+  )}
+  {props.kind === 'writing' && (
+    <article>
+      <header class="route-header"><h1>{props.entry.data.title}</h1><p>{props.entry.data.description}</p></header>
+      {Content && <div class="prose"><Content /></div>}
+    </article>
+  )}
+  {props.kind === 'about' && (
+    <article><header class="route-header"><h1>About</h1><p>{site.about}</p></header></article>
+  )}
+</BaseLayout>

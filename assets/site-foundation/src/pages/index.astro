@@ -1,0 +1,21 @@
+---
+import BaseLayout from '../layouts/BaseLayout.astro';
+import { sitePath } from '../lib/paths';
+import site from '../site.config.mjs';
+const destinations = [
+  site.modules.projects && ['Projects', 'projects/'],
+  site.modules.writing && ['Writing', 'writing/'],
+  site.modules.about && ['About', 'about/'],
+].filter(Boolean) as string[][];
+---
+<BaseLayout>
+  <header class="route-header">
+    <h1>{site.name}</h1>
+    <p>{site.description}</p>
+  </header>
+  {destinations.length > 0 && (
+    <nav class="route-index" aria-label="Site sections">
+      {destinations.map(([label, target]) => <a href={sitePath(target)}>{label}</a>)}
+    </nav>
+  )}
+</BaseLayout>

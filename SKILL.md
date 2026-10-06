@@ -9,6 +9,20 @@ Build a personal site that makes a visitor understand three things quickly: what
 
 The default delivery is a static Astro site with four routes: `/`, `/projects/`, `/writing/`, and `/about/`. Keep that structure only when it fits the person's material. A person with no public writing does not need a Writing navigation item; a researcher may need Publications instead of Projects.
 
+## Main Loop
+
+```text
+real material enters
+→ propose a public boundary and site contract
+→ the owner confirms only uncertain or high-impact boundaries
+→ build a working preview
+→ the owner reacts to the real page
+→ update the ledger or contract
+→ regenerate and verify
+```
+
+The approved evidence ledger and site contract are the source of truth. Pages are generated projections. Do not turn schema fields into a questionnaire: propose the obvious classifications yourself and ask one focused question only where the boundary is ambiguous or costly to get wrong.
+
 ## Start With Evidence
 
 Before choosing layout or writing copy, create a private source ledger. Read [the evidence guide](references/evidence.md) and separate each statement into:
@@ -51,9 +65,11 @@ Do not force every person into this table. Remove empty sections rather than add
 
 For a new build or a migration, read [the Astro foundation](references/astro-foundation.md). It contains the content model, route contracts, and GitHub Pages requirements.
 
+For a new site whose public boundary and modules are already clear, read [the site foundation](references/site-foundation.md) and initialize it from the approved site contract. The foundation deliberately carries no branded skin or fixed homepage composition.
+
 ## Build in This Order
 
-1. **Content contract:** define project and writing frontmatter before writing pages. Model status and source visibility explicitly, rather than burying them in prose.
+1. **Content contract:** define project and writing frontmatter before writing pages. Model publication, status, and source visibility as separate facts rather than burying them in prose. Publication intent must be explicit; missing intent never defaults to public.
 2. **Reading path:** implement the route that contains the strongest evidence first, usually Projects. On an individual project page, put a compact factual brief before long prose.
 3. **Index pages:** make Home an index of real routes. It should help a visitor choose where to go, not repeat every project description.
 4. **About:** use factual modules and short descriptions. Avoid personality claims such as “visionary”, “rigorous”, or “excellent intuition”.

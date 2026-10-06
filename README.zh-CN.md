@@ -131,6 +131,12 @@ references/existing-site.md
 
 references/bilingual.md
   双语站点：内容结构、叶子节点翻译、切换后的残留检查
+
+references/site-foundation.md + assets/site-foundation/
+  从已确认 Site Contract 初始化的、无品牌视觉的 Astro Foundation
+
+scripts/init-site.mjs + scripts/verify-site.mjs
+  确定性的初始化与核心产物验证
 ```
 
 ## 发布前的最低检查
