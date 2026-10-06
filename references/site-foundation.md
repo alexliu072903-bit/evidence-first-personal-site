@@ -38,7 +38,7 @@ Create a JSON site contract, then run:
 node scripts/init-site.mjs --contract /path/to/site-contract.json --output /path/to/empty-site
 ```
 
-The contract declares identity, languages, enabled modules, an optional factual About summary, interface labels, and deployment mode. The initializer refuses to overwrite a non-empty directory and does not apply a branded skin.
+The contract declares identity, languages, enabled modules, an optional factual About summary, interface labels, and deployment mode. The initializer refuses to overwrite a non-empty directory and does not apply a branded skin. It creates no deployment workflow in local mode. GitHub Pages mode requires `deployment.approved: true` after the owner approves the exact repository and public target; only then is the deployment workflow added.
 
 The foundation supports Chinese (`zh-CN`) and English (`en`) only: either language may be primary, and a site may use one or both. Other language codes fail initialization. For a bilingual site, the contract must provide a complete site description, About text when enabled, and every interface label for the secondary language. Project and Writing entries provide complete translated overviews in their `translations` block. A long note may remain in the primary language, but its secondary-language overview must include a `bodyNote` that says so; the primary-language body is hidden rather than presented as a translation.
 

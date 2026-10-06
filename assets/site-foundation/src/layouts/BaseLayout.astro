@@ -4,7 +4,7 @@ import '../styles/foundation.css';
 import LanguageToggle from '../components/LanguageToggle.astro';
 import LocalizedText from '../components/LocalizedText.astro';
 import { getPrimaryCopy, labelTranslations, siteCopyTranslations } from '../lib/localization';
-import { sitePath } from '../lib/paths';
+import { resourcePath, sitePath } from '../lib/paths';
 import site from '../site.config.mjs';
 
 interface Props {
@@ -25,6 +25,7 @@ const navigation = [
   site.modules.writing && ['writing', 'writing/'],
   site.modules.about && ['about', 'about/'],
 ].filter(Boolean) as string[][];
+const resumeHref = site.resume ? resourcePath(site.resume) : null;
 ---
 <!doctype html>
 <html lang={site.primaryLanguage}>
@@ -63,8 +64,8 @@ const navigation = [
             <LocalizedText primary={primaryCopy.labels[key]} translations={labelTranslations(site, key)} />
           </a>
         ))}
-        {site.resume && (
-          <a href={site.resume}>
+        {resumeHref && (
+          <a href={resumeHref}>
             <LocalizedText primary={primaryCopy.labels.resume} translations={labelTranslations(site, 'resume')} />
           </a>
         )}

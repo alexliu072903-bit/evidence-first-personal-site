@@ -34,8 +34,20 @@ jobs:
         run: npm test
 
   browser-qa:
-    name: Bilingual browser QA
+    name: Bilingual browser QA (${{ matrix.name }})
     runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        include:
+          - name: english-primary
+            contract: tests/fixtures/bilingual-contract.json
+            project: tests/fixtures/bilingual-project.md
+            resume: ''
+          - name: chinese-primary
+            contract: tests/fixtures/chinese-primary-contract.json
+            project: tests/fixtures/chinese-primary-project.md
+            resume: tests/fixtures/resume-placeholder.pdf
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -53,10 +65,16 @@ jobs:
         run: npx playwright install --with-deps chromium
 
       - name: Initialize bilingual fixture
-        run: node scripts/init-site.mjs --contract tests/fixtures/bilingual-contract.json --output .tmp/site
+        run: node scripts/init-site.mjs --contract ${{ matrix.contract }} --output .tmp/site
 
       - name: Add public fixture content
-        run: cp tests/fixtures/bilingual-project.md .tmp/site/src/content/projects/public-service-finder.md
+        run: cp ${{ matrix.project }} .tmp/site/src/content/projects/public-service-finder.md
+
+      - name: Add local resume fixture
+        if: matrix.resume != ''
+        run: |
+          mkdir -p .tmp/site/public/resume
+          cp ${{ matrix.resume }} .tmp/site/public/resume/mina.pdf
 
       - name: Install generated site dependencies
         working-directory: .tmp/site
@@ -69,7 +87,7 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: browser-qa-evidence
+          name: browser-qa-evidence-${{ matrix.name }}
           path: .tmp/site/qa
           if-no-files-found: ignore
           retention-days: 14

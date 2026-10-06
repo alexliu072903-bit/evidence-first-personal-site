@@ -10,6 +10,7 @@ const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const init = path.join(root, 'scripts', 'init-site.mjs');
 const contract = path.join(root, 'tests', 'fixtures', 'contract.json');
 const bilingualContract = path.join(root, 'tests', 'fixtures', 'bilingual-contract.json');
+const chinesePrimaryContract = path.join(root, 'tests', 'fixtures', 'chinese-primary-contract.json');
 
 test('initializes only the declared foundation contract', async () => {
   const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-'));
@@ -21,6 +22,7 @@ test('initializes only the declared foundation contract', async () => {
   assert.match(generated, /"skin": null/);
   assert.match(generated, /"copy"/);
   assert.doesNotMatch(generated, /Alex|AirJelly|Cairn/);
+  await assert.rejects(() => readFile(path.join(output, '.github', 'workflows', 'deploy.yml')));
 });
 
 test('requires complete site copy for every enabled language', async () => {
@@ -52,6 +54,26 @@ test('accepts only Chinese and English language contracts', async () => {
   const result = spawnSync(process.execPath, [init, '--contract', unsupportedPath, '--output', output], { encoding: 'utf8' });
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /only zh-CN and en are supported/);
+});
+
+test('adds deployment only after exact GitHub Pages approval', async () => {
+  const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-deployment-'));
+  const output = path.join(parent, 'approved-site');
+  execFileSync(process.execPath, [init, '--contract', chinesePrimaryContract, '--output', output]);
+  const workflow = await readFile(path.join(output, '.github', 'workflows', 'deploy.yml'), 'utf8');
+  assert.match(workflow, /Deploy Astro site/);
+  const generated = await readFile(path.join(output, 'src', 'site.config.mjs'), 'utf8');
+  assert.match(generated, /"primaryLanguage": "zh-CN"/);
+  assert.match(generated, /"resume": "resume\/mina\.pdf"/);
+
+  const unapproved = JSON.parse(await readFile(chinesePrimaryContract, 'utf8'));
+  unapproved.deployment.approved = false;
+  const unapprovedPath = path.join(parent, 'unapproved.json');
+  await writeFile(unapprovedPath, JSON.stringify(unapproved));
+  const rejectedOutput = path.join(parent, 'rejected-site');
+  const result = spawnSync(process.execPath, [init, '--contract', unapprovedPath, '--output', rejectedOutput], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /deployment\.approved must be true/);
 });
 
 test('refuses to overwrite a non-empty directory', async () => {

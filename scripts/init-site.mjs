@@ -63,8 +63,12 @@ function validateContract(contract) {
     errors.push('deployment.mode must be local or github-pages');
   }
   if (contract?.deployment?.mode === 'github-pages') {
+    if (contract.deployment.approved !== true) errors.push('deployment.approved must be true after the owner approves the exact GitHub Pages target');
     try { new URL(contract.deployment.site); } catch { errors.push('deployment.site must be an absolute URL for github-pages'); }
     if (!contract.deployment.base?.startsWith('/')) errors.push('deployment.base must start with / for github-pages');
+  }
+  if (contract?.resume != null && (typeof contract.resume !== 'string' || !contract.resume.trim())) {
+    errors.push('resume must be a non-empty local path or external URL');
   }
   return errors;
 }
@@ -96,6 +100,11 @@ if (!contractPath || !outputPath) {
       } else {
         await mkdir(absoluteOutput, { recursive: true });
         await cp(path.join(root, 'assets', 'site-foundation'), absoluteOutput, { recursive: true });
+        if (contract.deployment.mode === 'github-pages') {
+          const workflowDirectory = path.join(absoluteOutput, '.github', 'workflows');
+          await mkdir(workflowDirectory, { recursive: true });
+          await cp(path.join(root, 'assets', 'deployment', 'github-pages.yml'), path.join(workflowDirectory, 'deploy.yml'));
+        }
         await mkdir(path.join(absoluteOutput, 'src', 'content', 'projects'), { recursive: true });
         await mkdir(path.join(absoluteOutput, 'src', 'content', 'writing'), { recursive: true });
         const normalized = {
