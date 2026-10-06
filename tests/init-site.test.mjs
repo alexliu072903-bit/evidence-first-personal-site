@@ -21,7 +21,12 @@ test('initializes only the declared foundation contract', async () => {
   assert.match(generated, /"writing": false/);
   assert.match(generated, /"skin": null/);
   assert.match(generated, /"copy"/);
+  assert.match(generated, /"display": "mina@example\.com"/);
   assert.doesNotMatch(generated, /Alex|AirJelly|Cairn/);
+  assert.match(await readFile(path.join(output, 'src', 'styles', 'skin.css'), 'utf8'), /Replace this file/);
+  assert.match(await readFile(path.join(output, 'scripts', 'verify-site.mjs'), 'utf8'), /verify-site/);
+  assert.match(await readFile(path.join(output, 'scripts', 'browser-qa.mjs'), 'utf8'), /browser-qa/);
+  assert.match(await readFile(path.join(output, 'package-lock.json'), 'utf8'), /evidence-first-site/);
   await assert.rejects(() => readFile(path.join(output, '.github', 'workflows', 'deploy.yml')));
 });
 
@@ -74,6 +79,36 @@ test('adds deployment only after exact GitHub Pages approval', async () => {
   const result = spawnSync(process.execPath, [init, '--contract', unapprovedPath, '--output', rejectedOutput], { encoding: 'utf8' });
   assert.notEqual(result.status, 0);
   assert.match(result.stderr, /deployment\.approved must be true/);
+});
+
+test('rejects unsafe or incomplete contact routes', async () => {
+  const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-contact-'));
+  const invalid = JSON.parse(await readFile(contract, 'utf8'));
+  invalid.contact = { href: 'javascript:alert(1)', display: '' };
+  const invalidPath = path.join(parent, 'invalid-contact.json');
+  await writeFile(invalidPath, JSON.stringify(invalid));
+  const output = path.join(parent, 'site');
+  const result = spawnSync(process.execPath, [init, '--contract', invalidPath, '--output', output], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /contact\.display is required/);
+  assert.match(result.stderr, /contact\.href must use mailto: or https:\/\//);
+});
+
+test('keeps contact and disabled-module labels optional', async () => {
+  const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-minimal-'));
+  const minimal = JSON.parse(await readFile(contract, 'utf8'));
+  minimal.modules = { projects: false, writing: false, about: false };
+  delete minimal.about;
+  delete minimal.contact;
+  for (const key of ['projects', 'writing', 'about', 'resume', 'contact', 'situation', 'contribution', 'currentState']) {
+    delete minimal.labels[key];
+  }
+  const minimalPath = path.join(parent, 'minimal.json');
+  await writeFile(minimalPath, JSON.stringify(minimal));
+  const output = path.join(parent, 'site');
+  execFileSync(process.execPath, [init, '--contract', minimalPath, '--output', output]);
+  const generated = await readFile(path.join(output, 'src', 'site.config.mjs'), 'utf8');
+  assert.match(generated, /"contact": null/);
 });
 
 test('refuses to overwrite a non-empty directory', async () => {

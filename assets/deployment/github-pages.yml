@@ -15,6 +15,24 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
+        with:
+          node-version: 22
+          cache: npm
+      - name: Install dependencies
+        run: npm ci
+      - name: Install Chromium
+        run: npx playwright install --with-deps chromium
+      - name: Verify production site
+        run: npm run qa
+      - name: Upload browser QA evidence
+        if: always()
+        uses: actions/upload-artifact@v6
+        with:
+          name: browser-qa-evidence
+          path: qa
+          if-no-files-found: ignore
+          retention-days: 14
       - uses: withastro/action@v5
   deploy:
     needs: build

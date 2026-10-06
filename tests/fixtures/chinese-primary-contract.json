@@ -10,11 +10,16 @@
   },
   "about": "Mina 从事公共服务数字产品工作。",
   "resume": "resume/mina.pdf",
+  "contact": {
+    "href": "mailto:mina@example.com",
+    "display": "mina@example.com"
+  },
   "labels": {
     "projects": "项目",
     "writing": "文章",
     "about": "关于",
     "resume": "简历",
+    "contact": "联系",
     "skipToContent": "跳到正文",
     "primaryNavigation": "主导航",
     "siteSections": "网站栏目",
@@ -38,6 +43,7 @@
         "writing": "Writing",
         "about": "About",
         "resume": "Resume",
+        "contact": "Contact",
         "skipToContent": "Skip to content",
         "primaryNavigation": "Primary navigation",
         "siteSections": "Site sections",

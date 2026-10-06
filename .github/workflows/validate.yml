@@ -58,12 +58,6 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Install Skill dependencies
-        run: npm ci
-
-      - name: Install Chromium
-        run: npx playwright install --with-deps chromium
-
       - name: Initialize bilingual fixture
         run: node scripts/init-site.mjs --contract ${{ matrix.contract }} --output .tmp/site
 
@@ -78,10 +72,15 @@ jobs:
 
       - name: Install generated site dependencies
         working-directory: .tmp/site
-        run: npm install
+        run: npm ci
+
+      - name: Install Chromium
+        working-directory: .tmp/site
+        run: npx playwright install --with-deps chromium
 
       - name: Run production and browser verification
-        run: node scripts/browser-qa.mjs --site .tmp/site
+        working-directory: .tmp/site
+        run: npm run qa
 
       - name: Upload browser QA evidence
         if: always()

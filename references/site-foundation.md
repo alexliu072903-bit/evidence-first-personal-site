@@ -38,26 +38,26 @@ Create a JSON site contract, then run:
 node scripts/init-site.mjs --contract /path/to/site-contract.json --output /path/to/empty-site
 ```
 
-The contract declares identity, languages, enabled modules, an optional factual About summary, interface labels, and deployment mode. The initializer refuses to overwrite a non-empty directory and does not apply a branded skin. It creates no deployment workflow in local mode. GitHub Pages mode requires `deployment.approved: true` after the owner approves the exact repository and public target; only then is the deployment workflow added.
+The contract declares identity, languages, enabled modules, an optional factual About summary, an optional public contact route, interface labels, and deployment mode. The initializer refuses to overwrite a non-empty directory and does not apply a branded skin. Every generated site includes an empty `src/styles/skin.css` hook; replace that file to add a visual identity without modifying the layout or content. It creates no deployment workflow in local mode. GitHub Pages mode requires `deployment.approved: true` after the owner approves the exact repository and public target; only then is the deployment workflow added.
 
 The foundation supports Chinese (`zh-CN`) and English (`en`) only: either language may be primary, and a site may use one or both. Other language codes fail initialization. For a bilingual site, the contract must provide a complete site description, About text when enabled, and every interface label for the secondary language. Project and Writing entries provide complete translated overviews in their `translations` block. A long note may remain in the primary language, but its secondary-language overview must include a `bodyNote` that says so; the primary-language body is hidden rather than presented as a translation.
 
 ## Verify
 
-After adding content and installing the generated site's dependencies, run:
+The generated site carries its own lockfile and verification scripts. After adding content, run inside the generated site:
 
 ```bash
-node scripts/verify-site.mjs --site /path/to/site
+npm ci
+npm run verify
 ```
 
 Verification builds the actual artifact, requires enabled Projects or Writing modules to contain public entries, and checks that declared routes exist while disabled routes do not.
 
-For browser-level verification, install the Skill repository dependencies and Playwright Chromium once, then run:
+For browser-level verification, install Playwright Chromium once, then run:
 
 ```bash
-npm install
 npx playwright install chromium
-node scripts/browser-qa.mjs --site /path/to/site
+npm run qa
 ```
 
 The browser verifier checks every generated route at 1440, 1100, 768, 375, and 320 px; saves screenshots; checks horizontal overflow, broken images, console and page errors, visible keyboard focus, second-language coverage, hidden primary-only long content, and language preservation across internal links. It writes `qa/browser-report.json` inside the generated site.

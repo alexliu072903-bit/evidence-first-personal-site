@@ -7,12 +7,22 @@ import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const supportedLanguages = new Set(['zh-CN', 'en']);
-const labelKeys = [
-  'projects', 'writing', 'about', 'resume', 'skipToContent', 'primaryNavigation',
-  'siteSections', 'changeLanguage', 'situation', 'contribution', 'currentState',
+const globalLabelKeys = [
+  'skipToContent', 'primaryNavigation', 'siteSections', 'changeLanguage',
   'notFound', 'notFoundDescription', 'sourceOpen', 'sourcePrivate', 'sourceMixed',
   'sourceNotApplicable',
 ];
+
+function requiredLabelKeys(contract) {
+  return [
+    ...globalLabelKeys,
+    ...(contract?.modules?.projects ? ['projects', 'situation', 'contribution', 'currentState'] : []),
+    ...(contract?.modules?.writing ? ['writing'] : []),
+    ...(contract?.modules?.about ? ['about'] : []),
+    ...(contract?.resume ? ['resume'] : []),
+    ...(contract?.contact ? ['contact'] : []),
+  ];
+}
 
 function argument(name) {
   const index = process.argv.indexOf(name);
@@ -47,6 +57,7 @@ function validateContract(contract) {
     if (typeof contract?.modules?.[module] !== 'boolean') errors.push(`modules.${module} must be true or false`);
   }
   if (contract?.modules?.about && !contract?.about?.trim()) errors.push('about is required when modules.about is true');
+  const labelKeys = requiredLabelKeys(contract);
   for (const key of labelKeys) {
     if (!contract?.labels?.[key]?.trim()) errors.push(`labels.${key} is required`);
   }
@@ -69,6 +80,13 @@ function validateContract(contract) {
   }
   if (contract?.resume != null && (typeof contract.resume !== 'string' || !contract.resume.trim())) {
     errors.push('resume must be a non-empty local path or external URL');
+  }
+  if (contract?.contact != null) {
+    if (typeof contract.contact !== 'object') errors.push('contact must contain href and display');
+    else {
+      if (!contract.contact.display?.trim()) errors.push('contact.display is required');
+      if (!/^(?:mailto:|https:\/\/)/.test(contract.contact.href ?? '')) errors.push('contact.href must use mailto: or https://');
+    }
   }
   return errors;
 }
@@ -100,6 +118,10 @@ if (!contractPath || !outputPath) {
       } else {
         await mkdir(absoluteOutput, { recursive: true });
         await cp(path.join(root, 'assets', 'site-foundation'), absoluteOutput, { recursive: true });
+        const siteScripts = path.join(absoluteOutput, 'scripts');
+        await mkdir(siteScripts, { recursive: true });
+        await cp(path.join(root, 'scripts', 'verify-site.mjs'), path.join(siteScripts, 'verify-site.mjs'));
+        await cp(path.join(root, 'scripts', 'browser-qa.mjs'), path.join(siteScripts, 'browser-qa.mjs'));
         if (contract.deployment.mode === 'github-pages') {
           const workflowDirectory = path.join(absoluteOutput, '.github', 'workflows');
           await mkdir(workflowDirectory, { recursive: true });
@@ -113,6 +135,7 @@ if (!contractPath || !outputPath) {
           languages: [...new Set(contract.languages)],
           modules: contract.modules,
           resume: contract.resume ?? null,
+          contact: contract.contact ?? null,
           copy: {
             [contract.primaryLanguage]: {
               description: contract.description.trim(),

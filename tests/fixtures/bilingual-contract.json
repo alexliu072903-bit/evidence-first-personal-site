@@ -9,11 +9,16 @@
     "about": true
   },
   "about": "Mina works on public-interest digital products.",
+  "contact": {
+    "href": "mailto:mina@example.com",
+    "display": "mina@example.com"
+  },
   "labels": {
     "projects": "Projects",
     "writing": "Writing",
     "about": "About",
     "resume": "Resume",
+    "contact": "Contact",
     "skipToContent": "Skip to content",
     "primaryNavigation": "Primary navigation",
     "siteSections": "Site sections",
@@ -37,6 +42,7 @@
         "writing": "文章",
         "about": "关于",
         "resume": "简历",
+        "contact": "联系",
         "skipToContent": "跳到正文",
         "primaryNavigation": "主导航",
         "siteSections": "网站栏目",
