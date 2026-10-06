@@ -1,0 +1,14 @@
+---
+import { tx } from '../lib/i18n';
+import type { Text } from '../lib/site-types';
+
+interface Props {
+  text: Text;
+  as?: keyof HTMLElementTagNameMap;
+  where?: string;
+}
+
+const { text, as: Tag = 'span', where = 'text' } = Astro.props;
+const pair = tx(text, where);
+---
+<Tag data-t={pair.secondary}>{pair.primary}</Tag>

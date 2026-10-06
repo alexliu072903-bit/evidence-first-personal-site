@@ -1,0 +1,85 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ProjectLabels from '../../components/ProjectLabels.astro';
+import T from '../../components/T.astro';
+import { contentText } from '../../lib/content-i18n';
+import { attr, secondary, tx } from '../../lib/i18n';
+import { resourcePath, sitePath } from '../../lib/paths';
+
+export async function getStaticPaths() {
+  const projects = (await getCollection('projects')).filter((entry) => entry.data.publication === 'public');
+  const translations = await getCollection('translations');
+  return projects.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry, translatedBody: translations.find((item) => item.id === `projects/${entry.id}`) },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'projects'>;
+  translatedBody?: CollectionEntry<'translations'>;
+}
+
+const { entry, translatedBody } = Astro.props;
+const { Content } = await render(entry);
+const TranslatedContent = translatedBody ? (await render(translatedBody)).Content : null;
+if (secondary && !TranslatedContent && !entry.data.translation?.bodyNote) {
+  throw new Error(`Project ${entry.id} needs a translated body or translation.bodyNote`);
+}
+const title = contentText(entry.data.title, entry.data.translation?.title, `project ${entry.id} title`);
+const description = contentText(entry.data.description, entry.data.translation?.description, `project ${entry.id} description`);
+const translatedBrief = entry.data.brief?.map((row, index) => ({
+  label: contentText(row.label, entry.data.translation?.brief?.[index]?.label, `project ${entry.id} brief ${index} label`),
+  text: contentText(row.text, entry.data.translation?.brief?.[index]?.text, `project ${entry.id} brief ${index} text`),
+}));
+const translatedFacts = entry.data.facts?.map((fact, index) => ({
+  value: contentText(fact.value, entry.data.translation?.facts?.[index]?.value, `project ${entry.id} fact ${index} value`),
+  label: contentText(fact.label, entry.data.translation?.facts?.[index]?.label, `project ${entry.id} fact ${index} label`),
+}));
+---
+<BaseLayout title={title} description={description}>
+  <article class="detail-page">
+    <header class="route-header">
+      <ProjectLabels status={entry.data.status} source={entry.data.source} />
+      <T text={title} as="h1" />
+      <T text={description} as="p" />
+    </header>
+
+    {translatedBrief?.length && (
+      <dl class="project-brief">
+        {translatedBrief.map((row) => <div><dt><T text={row.label} /></dt><dd><T text={row.text} /></dd></div>)}
+      </dl>
+    )}
+
+    {entry.data.image && (() => {
+      const alt = contentText(entry.data.imageAlt!, entry.data.translation?.imageAlt, `project ${entry.id} image alt`);
+      const pair = tx(alt);
+      return <img class="project-image" src={sitePath(entry.data.image)} alt={pair.primary} {...attr('alt', pair)} />;
+    })()}
+
+    {translatedFacts?.length && (
+      <section class="facts" aria-label="Facts">
+        {translatedFacts.map((fact) => <div><T text={fact.value} as="strong" /><T text={fact.label} as="span" /></div>)}
+        {entry.data.factsNote && <T text={contentText(entry.data.factsNote, entry.data.translation?.factsNote, `project ${entry.id} facts note`)} as="p" />}
+      </section>
+    )}
+
+    {entry.data.links.length > 0 && (
+      <nav class="detail-links" aria-label="Project links">
+        {entry.data.links.map((link, index) => (
+          <a href={resourcePath(link.url)}>
+            <T text={contentText(link.label, entry.data.translation?.links?.[index]?.label, `project ${entry.id} link ${index}`)} />
+          </a>
+        ))}
+      </nav>
+    )}
+
+    <div class="prose" data-lang-block="primary"><Content /></div>
+    {TranslatedContent ? (
+      <div class="prose" data-lang-block="secondary" hidden><TranslatedContent /></div>
+    ) : secondary && (
+      <p class="translation-note" data-lang-block="secondary" hidden>{entry.data.translation?.bodyNote}</p>
+    )}
+  </article>
+</BaseLayout>

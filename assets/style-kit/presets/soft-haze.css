@@ -1,0 +1,47 @@
+/* tokens:start */
+:root {
+  --color-ink: #0d0d0d;
+  --color-body: #404040;
+  --color-muted: #666666;
+  --color-line: #e6e6e6;
+  --color-page: #fafafa;
+  --color-surface: #ffffff;
+  --color-accent: #a66b3d;
+  --color-accent-ink: #7a4c29;
+  --tile-bg: rgba(255, 255, 255, .94);
+  --font-sans: -apple-system, BlinkMacSystemFont, "PingFang SC", "Helvetica Neue", sans-serif;
+  --font-display: var(--font-sans);
+  --font-mono: ui-monospace, "SF Mono", monospace;
+  --size-body: 15px;
+  --leading-body: 1.75;
+  --size-h1: clamp(2.3rem, 5vw, 3.6rem);
+  --size-h2: clamp(1.7rem, 3vw, 2.5rem);
+  --size-title: 28px;
+  --size-small: 13px;
+  --measure: 68ch;
+  --space-entry: 28px;
+  --radius-tile: 22px;
+  --radius-card: 14px;
+  --radius-pill: 999px;
+  --shadow-tile: 0 24px 60px rgba(0, 80, 102, .14), 0 2px 6px rgba(0, 80, 102, .06);
+  --shadow-card: 0 8px 24px rgba(0, 0, 0, .06);
+  --haze: var(--haze-image-light);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-ink: #f2f2f2;
+    --color-body: #c9c9c9;
+    --color-muted: #969c99;
+    --color-line: #3a3f45;
+    --color-page: #15181b;
+    --color-surface: #2a2e33;
+    --color-accent: #d3a47c;
+    --color-accent-ink: #e5bd9a;
+    --tile-bg: rgba(42, 46, 51, .96);
+    --shadow-tile: 0 24px 60px rgba(0, 0, 0, .45);
+    --shadow-card: 0 8px 24px rgba(0, 0, 0, .24);
+    --haze: var(--haze-image-dark);
+  }
+}
+/* tokens:end */

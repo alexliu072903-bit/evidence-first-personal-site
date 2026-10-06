@@ -1,0 +1,26 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import T from '../../components/T.astro';
+import { contentText } from '../../lib/content-i18n';
+import { ui } from '../../lib/i18n';
+import { sitePath } from '../../lib/paths';
+import site from '../../site.config.mjs';
+
+if (!site.modules.writing) throw new Error('Writing module is disabled; remove this page with new-site.mjs');
+const writing = (await getCollection('writing')).filter((entry) => entry.data.publication === 'public').sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf());
+---
+<BaseLayout title={ui.writing}>
+  <header class="route-header"><T text={ui.writing} as="h1" /></header>
+  <ol class="writing-list">
+    {writing.map((entry) => (
+      <li>
+        <time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toISOString().slice(0, 10)}</time>
+        <a href={sitePath(`writing/${entry.id}/`)}>
+          <T text={contentText(entry.data.title, entry.data.translation?.title, `writing ${entry.id} title`)} as="h2" />
+          <T text={contentText(entry.data.description, entry.data.translation?.description, `writing ${entry.id} description`)} as="p" />
+        </a>
+      </li>
+    ))}
+  </ol>
+</BaseLayout>

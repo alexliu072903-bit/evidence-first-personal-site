@@ -1,0 +1,45 @@
+---
+import { getCollection, render, type CollectionEntry } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import T from '../../components/T.astro';
+import { contentText } from '../../lib/content-i18n';
+import { secondary } from '../../lib/i18n';
+
+export async function getStaticPaths() {
+  const writing = (await getCollection('writing')).filter((entry) => entry.data.publication === 'public');
+  const translations = await getCollection('translations');
+  return writing.map((entry) => ({
+    params: { id: entry.id },
+    props: { entry, translatedBody: translations.find((item) => item.id === `writing/${entry.id}`) },
+  }));
+}
+
+interface Props {
+  entry: CollectionEntry<'writing'>;
+  translatedBody?: CollectionEntry<'translations'>;
+}
+
+const { entry, translatedBody } = Astro.props;
+const { Content } = await render(entry);
+const TranslatedContent = translatedBody ? (await render(translatedBody)).Content : null;
+if (secondary && !TranslatedContent && !entry.data.translation?.bodyNote) {
+  throw new Error(`Writing ${entry.id} needs a translated body or translation.bodyNote`);
+}
+const title = contentText(entry.data.title, entry.data.translation?.title, `writing ${entry.id} title`);
+const description = contentText(entry.data.description, entry.data.translation?.description, `writing ${entry.id} description`);
+---
+<BaseLayout title={title} description={description}>
+  <article class="detail-page writing-detail">
+    <header class="route-header">
+      <time datetime={entry.data.publishedAt.toISOString()}>{entry.data.publishedAt.toISOString().slice(0, 10)}</time>
+      <T text={title} as="h1" />
+      <T text={description} as="p" />
+    </header>
+    <div class="prose" data-lang-block="primary"><Content /></div>
+    {TranslatedContent ? (
+      <div class="prose" data-lang-block="secondary" hidden><TranslatedContent /></div>
+    ) : secondary && (
+      <p class="translation-note" data-lang-block="secondary" hidden>{entry.data.translation?.bodyNote}</p>
+    )}
+  </article>
+</BaseLayout>
