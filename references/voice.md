@@ -1,29 +1,40 @@
 # Voice
 
-Take the register from product copy that is confident without being loud. The point is to be specific and calm, and to leave the judgment to the reader.
+Write with confidence but without self-endorsement. Say what a visitor can inspect, understand, or do, then let the evidence carry the judgment.
 
-## What to do
+## Use
 
-- **Say what the visitor can do or see.** Describe behavior, not qualities. "Removes filler words such as 'um' and 'you know'" is a sentence; "powerful, intelligent editing" is not.
-- **Short titles, one sentence under each.** A title names a thing in a few words. The sentence under it explains one thing.
-- **Put the user's step first.** "Find the step where the user is stuck, ask them to do one thing, and let the system handle the rest" reads better than a list of abstract nouns.
-- **Keep a working level of terminology.** Terms the reader may need to look up are fine when they are exact. Do not rewrite precise terms into vague everyday words, and do not explain terms the audience knows.
-- **Let evidence carry the praise.** Numbers, screenshots, links, and third-party words create the impression. The page never says its own material is important, core, leading, or unique.
+- Short titles that name a concrete thing.
+- One sentence for one point.
+- The user's or visitor's action before internal mechanism.
+- Exact working terminology when the intended reader knows it.
+- A plain source line under numbers or adapted writing.
+- Current state and limits stated without defensive language.
 
-## What to remove
+## Avoid
 
-| Pattern | Why | Instead |
-| --- | --- | --- |
-| "The website lists this as a core capability" | The page endorses itself | State what it is; show the source as an image or link |
-| "real", "complete", "truly", "core" used as intensifiers | They assert quality without showing it | Delete, or replace with the specific fact |
-| "Not X, but Y" stacked in one paragraph | Mannered, and hides the claim | State Y directly. Keep a contrast only when the reader would assume X |
-| "Do not stop at the PRD ... until it can really be used" | Contrast plus an intensifier | "Keep going after the PRD: connect the data, design the interaction, deploy" |
-| Defensive disclaimers under numbers | They read as unsure | One short line of source and period: "Cold-start figures, from my resume." |
-| Abstract noun chains ("decision-signal detection, relevant-context retrieval") | The reader cannot picture an action | One sentence on how it is used |
+- praise words such as powerful, leading, visionary, complete, or exceptional;
+- abstract noun chains that do not describe an action;
+- repeated “not X, but Y” constructions;
+- claims that the page itself is important or core;
+- invented results, urgency, testimonials, or precision;
+- slogans added only to make a page feel finished.
+
+## Compare with the owner's material
+
+Every style kit includes one “not this / use this” comparison written from the owner's evidence.
+
+| Do not write | Write instead |
+| --- | --- |
+| “I am an experienced designer committed to excellent experiences.” | “I observe real tasks, then turn the findings into design conditions a team can check.” |
+| “A powerful configuration system transforms the user experience.” | “Change each setting directly; the result appears immediately.” |
+| “I led a complete onboarding transformation.” | “I redesigned the first task and tested whether a new user could complete it without explanation.” |
+
+The right-hand version must remain within the approved contribution boundary. If the evidence does not support it, narrow it or ask the owner.
 
 ## Checks
 
-- Read each section title alone. Would a stranger know what is under it?
-- Count intensifier words (real, complete, core, truly). Keep the ones that carry a fact.
-- Every sentence about a number says where it came from.
-- The English and the original language say the same thing; neither is a gloss of the other.
+- Read every heading alone: does it predict what follows?
+- Remove intensifiers that do not carry a fact.
+- Make every number traceable to a source and date.
+- Ensure Chinese and English make the same claim; neither may be a shorter marketing gloss.

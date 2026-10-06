@@ -1,9 +1,0 @@
----
-interface Props {
-  primary: string;
-  translations?: Record<string, string | undefined>;
-  as?: keyof HTMLElementTagNameMap;
-}
-const { primary, translations = {}, as: Tag = 'span' } = Astro.props;
----
-<Tag data-localized data-primary={primary} data-translations={JSON.stringify(translations)}>{primary}</Tag>

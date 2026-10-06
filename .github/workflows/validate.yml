@@ -1,4 +1,4 @@
-name: Validate Skill and Site Foundation
+name: Validate v1 Skill
 
 on:
   pull_request:
@@ -33,21 +33,21 @@ jobs:
       - name: Run behavior tests
         run: npm test
 
-  browser-qa:
-    name: Bilingual browser QA (${{ matrix.name }})
+  generated-site-qa:
+    name: Generated site QA (${{ matrix.name }})
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         include:
-          - name: english-primary
-            contract: tests/fixtures/bilingual-contract.json
-            project: tests/fixtures/bilingual-project.md
-            resume: ''
-          - name: chinese-primary
-            contract: tests/fixtures/chinese-primary-contract.json
-            project: tests/fixtures/chinese-primary-project.md
-            resume: tests/fixtures/resume-placeholder.pdf
+          - name: zh-en-all-modules-soft-haze
+            languages: zh-CN,en
+            modules: projects,writing,about
+            fixture: tests/fixtures/site-zh-en
+          - name: en-projects-about-paper
+            languages: en
+            modules: projects,about
+            fixture: tests/fixtures/site-en-paper
     steps:
       - name: Check out repository
         uses: actions/checkout@v5
@@ -58,35 +58,37 @@ jobs:
           node-version: 22
           cache: npm
 
-      - name: Initialize bilingual fixture
-        run: node scripts/init-site.mjs --contract ${{ matrix.contract }} --output .tmp/site
+      - name: Install Skill dependencies
+        run: npm ci
 
-      - name: Add public fixture content
-        run: cp ${{ matrix.project }} .tmp/site/src/content/projects/public-service-finder.md
+      - name: Generate selected v1 site
+        run: >-
+          node scripts/new-site.mjs
+          --output .tmp/site
+          --name "Fixture Person"
+          --languages ${{ matrix.languages }}
+          --modules ${{ matrix.modules }}
+          --site http://localhost:4321
+          --base /
 
-      - name: Add local resume fixture
-        if: matrix.resume != ''
-        run: |
-          mkdir -p .tmp/site/public/resume
-          cp ${{ matrix.resume }} .tmp/site/public/resume/mina.pdf
+      - name: Add evidence-backed fixture
+        run: cp -R ${{ matrix.fixture }}/. .tmp/site/
 
       - name: Install generated site dependencies
         working-directory: .tmp/site
         run: npm ci
 
       - name: Install Chromium
-        working-directory: .tmp/site
         run: npx playwright install --with-deps chromium
 
       - name: Run production and browser verification
-        working-directory: .tmp/site
-        run: npm run qa
+        run: node scripts/check-site.mjs --site .tmp/site --browser
 
       - name: Upload browser QA evidence
         if: always()
         uses: actions/upload-artifact@v6
         with:
-          name: browser-qa-evidence-${{ matrix.name }}
+          name: generated-site-qa-${{ matrix.name }}
           path: .tmp/site/qa
           if-no-files-found: ignore
           retention-days: 14

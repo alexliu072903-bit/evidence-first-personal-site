@@ -1,46 +1,56 @@
-# Evidence Guide
+# Evidence Intake
 
-## Private Source Ledger
+Use this during material collection for both new and existing sites. Keep the ledger private; it must not enter the public site.
 
-Make this ledger in the task conversation or a private working note. Do not add it to the public site.
+## Ledger
 
-| Item | Public statement | Evidence or source | Boundary | Decision |
+| Item | Proposed public statement | Evidence or source | Boundary | Decision |
 | --- | --- | --- | --- | --- |
-| Project | What a visitor can truthfully understand | Public product, repository, article, screenshot, or user-supplied text | Public / private source / historical / uncertain | Publish, simplify, hold, or omit |
-| Role | Employer, title, dates, agreed scope | Resume or direct confirmation | Exact title may need correction | Publish or omit |
-| Writing | Title, date, original source, language | Public URL or supplied manuscript | Attribution required? | Publish, adapt, or hold |
+| Project | What a visitor can truthfully understand | Product, repository, screenshot, article, supplied note | Public / private / mixed / uncertain | Publish, simplify, hold, omit |
+| Role | Employer, title, dates, agreed scope | Approved resume or direct confirmation | Contribution may need confirmation | Publish or omit |
+| Writing | Title, date, manuscript, original URL | Published source or supplied draft | Attribution required? | Publish, adapt, hold |
+| Personal material | Photo, education, contact, resume | Owner-supplied public version | Other people or private details visible? | Publish, crop, hold |
 
-Ask for confirmation when the distinction matters. “I worked on onboarding” and “I designed the company's onboarding system” are materially different public claims.
+The Agent proposes classifications first. Ask the owner only when an answer would change the public boundary, contribution claim, or site structure.
 
-## Project Intake
+## Project intake
 
-For each candidate project, collect only what can support a useful page:
+For each candidate project, establish:
 
-1. What real situation or user action made this worth building?
-2. What did the person actually decide, design, build, research, or deliver?
-3. What is its current state: accessible, historical, experimental, discontinued, or unknown?
-4. Is the source open, private, mixed, or not applicable?
-5. What public evidence can a visitor inspect: URL, repository, article, screenshot, demo, or no public evidence?
-6. What must not be said or shown?
+1. the real situation or user action that made it worth doing;
+2. what the owner actually decided, designed, built, researched, or delivered;
+3. current state: live, available, experimental, in progress, historical, or discontinued;
+4. source visibility: open, private, mixed, or not applicable;
+5. public evidence a visitor can inspect;
+6. what must not be said or shown.
 
-If answers 3–6 are unknown, do not infer them. A project can still appear as a short historical record, but it should not promise access or imply an open-source implementation.
+If state, source visibility, or contribution is uncertain, do not infer it. Hold the item or publish a narrower statement.
 
-## Writing Intake
+## Capabilities and evidence
 
-For each article, collect title, date, language, a one-sentence description, estimated reading time, and its original source if adapted. The article itself is the evidence; a decorative cover is optional.
+Choose two or three things the owner mainly does. Assign one different public project to each capability. If two projects tell the same story, keep the stronger one. If a capability has no evidence, either remove the claim or build evidence later; do not stretch an unrelated project over it.
 
-## Personal Material
+Historical or discontinued work can still be evidence when the state and access boundary are explicit. A dead link presented as live is worse than no link.
 
-Treat biography as factual modules rather than a personal manifesto:
+## Numbers
 
-- name and desired display name;
-- contact or a public contact route;
-- education;
-- internships, employment, research, or independent practice;
-- awards only when they are relevant and precisely named;
-- skills only when the person is comfortable having them evaluated publicly;
-- a PDF resume only after the person supplies an approved public version.
+- Use a number only when its source and capture date are known.
+- Keep at most four facts on one project, with a short `factsNote` describing source and period.
+- Round approximate values and label them as approximate.
+- Do not publish employer or client metrics unless the owner confirms they are public.
+- Crop public-post screenshots to the owner's content and counters; remove other people's content, account details, and status bars.
 
-Numbers and employer material follow [the proof guide](proof.md): every number has a source and a date, and an employer's internal figures stay out unless the owner confirms they are public.
+## Company work
 
-Personal photographs can humanize a site, but they should not replace professional evidence or reveal someone else's private information.
+Describe the owner's role, direction, and approved scope. Use the employer's public product page as evidence when available. Do not publish internal screenshots, roadmap, unstable feature names, private process counts, or source code. A public site can say what part the owner worked on without pretending the underlying source is public.
+
+## Minimum usable input
+
+- factual name and one-line orientation;
+- at least two projects or work samples;
+- inspectable evidence where possible;
+- public contact route;
+- explicit public/private boundary;
+- optional writing, photos, education, and approved resume.
+
+Remove an unsupported section instead of filling it with generic claims.
