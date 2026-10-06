@@ -35,6 +35,10 @@ footer { border-top: 1px solid #d9dbd9; padding-block: 1.5rem; color: #585c58; }
 .evidence-asset figcaption { margin-top: .5rem; color: #585c58; }
 .prose { max-width: 68ch; margin-top: 2.5rem; }
 .prose > * + * { margin-top: 1em; }
+[data-secondary-only] { display: none; }
+html[data-language-mode="secondary"] [data-primary-only] { display: none; }
+html[data-language-mode="secondary"] [data-secondary-only] { display: block; }
+.translation-note { max-width: 68ch; margin-top: 2.5rem; color: #585c58; }
 @media (max-width: 42rem) {
   .site-header { align-items: flex-start; flex-wrap: wrap; }
   .site-header nav { order: 3; width: 100%; margin-left: 0; }

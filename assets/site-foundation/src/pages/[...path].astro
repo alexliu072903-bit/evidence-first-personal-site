@@ -2,8 +2,10 @@
 import { getCollection, render, type CollectionEntry } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
 import EvidenceAsset from '../components/EvidenceAsset.astro';
+import LocalizedText from '../components/LocalizedText.astro';
 import SourceLabel from '../components/SourceLabel.astro';
 import StatusLabel from '../components/StatusLabel.astro';
+import { fieldTranslations, getPrimaryCopy, labelTranslations, siteCopyTranslations } from '../lib/localization';
 import { sitePath } from '../lib/paths';
 import site from '../site.config.mjs';
 
@@ -33,22 +35,43 @@ type PageProps =
   | { kind: 'about' };
 
 const props = Astro.props as PageProps;
+const primaryCopy = getPrimaryCopy(site);
 let Content;
 if (props.kind === 'project' || props.kind === 'writing') Content = (await render(props.entry)).Content;
+
 const pageTitle = props.kind === 'project' || props.kind === 'writing'
   ? `${props.entry.data.title} — ${site.name}`
-  : site.name;
+  : props.kind === 'projects-index'
+    ? `${primaryCopy.labels.projects} — ${site.name}`
+    : props.kind === 'writing-index'
+      ? `${primaryCopy.labels.writing} — ${site.name}`
+      : `${primaryCopy.labels.about} — ${site.name}`;
+
+const pageTitleTranslations = props.kind === 'project' || props.kind === 'writing'
+  ? Object.fromEntries(Object.entries(fieldTranslations(props.entry.data.translations, 'title')).map(([language, title]) => [language, `${title} — ${site.name}`]))
+  : props.kind === 'projects-index'
+    ? Object.fromEntries(Object.entries(labelTranslations(site, 'projects')).map(([language, label]) => [language, `${label} — ${site.name}`]))
+    : props.kind === 'writing-index'
+      ? Object.fromEntries(Object.entries(labelTranslations(site, 'writing')).map(([language, label]) => [language, `${label} — ${site.name}`]))
+      : Object.fromEntries(Object.entries(labelTranslations(site, 'about')).map(([language, label]) => [language, `${label} — ${site.name}`]));
 ---
-<BaseLayout title={pageTitle}>
+<BaseLayout title={pageTitle} titleTranslations={pageTitleTranslations}>
   {props.kind === 'projects-index' && (
     <>
-      <header class="route-header"><h1>Projects</h1></header>
+      <header class="route-header">
+        <LocalizedText as="h1" primary={primaryCopy.labels.projects} translations={labelTranslations(site, 'projects')} />
+      </header>
       <ol class="entry-list">
         {[...props.entries].sort((a, b) => a.data.order - b.data.order).map((project) => (
           <li>
-            <a href={sitePath(`projects/${project.id}/`)}>{project.data.title}</a>
-            <p>{project.data.description}</p>
-            <div class="fact-row"><StatusLabel value={project.data.status} /><SourceLabel value={project.data.source} /></div>
+            <a href={sitePath(`projects/${project.id}/`)}>
+              <LocalizedText primary={project.data.title} translations={fieldTranslations(project.data.translations, 'title')} />
+            </a>
+            <LocalizedText as="p" primary={project.data.description} translations={fieldTranslations(project.data.translations, 'description')} />
+            <div class="fact-row">
+              <StatusLabel value={project.data.status} translations={fieldTranslations(project.data.translations, 'status')} />
+              <SourceLabel value={project.data.source} />
+            </div>
           </li>
         ))}
       </ol>
@@ -57,36 +80,75 @@ const pageTitle = props.kind === 'project' || props.kind === 'writing'
   {props.kind === 'project' && (
     <article>
       <header class="route-header">
-        <div class="fact-row"><StatusLabel value={props.entry.data.status} /><SourceLabel value={props.entry.data.source} /></div>
-        <h1>{props.entry.data.title}</h1>
-        <p>{props.entry.data.description}</p>
+        <div class="fact-row">
+          <StatusLabel value={props.entry.data.status} translations={fieldTranslations(props.entry.data.translations, 'status')} />
+          <SourceLabel value={props.entry.data.source} />
+        </div>
+        <LocalizedText as="h1" primary={props.entry.data.title} translations={fieldTranslations(props.entry.data.translations, 'title')} />
+        <LocalizedText as="p" primary={props.entry.data.description} translations={fieldTranslations(props.entry.data.translations, 'description')} />
       </header>
       <dl class="project-brief">
-        <div><dt>Situation</dt><dd>{props.entry.data.problem}</dd></div>
-        <div><dt>Contribution</dt><dd>{props.entry.data.contribution}</dd></div>
-        <div><dt>Current state</dt><dd>{props.entry.data.current}</dd></div>
+        <div>
+          <dt><LocalizedText primary={primaryCopy.labels.situation} translations={labelTranslations(site, 'situation')} /></dt>
+          <dd><LocalizedText primary={props.entry.data.problem} translations={fieldTranslations(props.entry.data.translations, 'problem')} /></dd>
+        </div>
+        <div>
+          <dt><LocalizedText primary={primaryCopy.labels.contribution} translations={labelTranslations(site, 'contribution')} /></dt>
+          <dd><LocalizedText primary={props.entry.data.contribution} translations={fieldTranslations(props.entry.data.translations, 'contribution')} /></dd>
+        </div>
+        <div>
+          <dt><LocalizedText primary={primaryCopy.labels.currentState} translations={labelTranslations(site, 'currentState')} /></dt>
+          <dd><LocalizedText primary={props.entry.data.current} translations={fieldTranslations(props.entry.data.translations, 'current')} /></dd>
+        </div>
       </dl>
-      {props.entry.data.image && <EvidenceAsset src={props.entry.data.image} alt={props.entry.data.imageAlt!} />}
-      {Content && <div class="prose"><Content /></div>}
+      {props.entry.data.image && (
+        <EvidenceAsset
+          src={props.entry.data.image}
+          alt={props.entry.data.imageAlt!}
+          altTranslations={fieldTranslations(props.entry.data.translations, 'imageAlt')}
+        />
+      )}
+      {Content && <div class="prose" data-primary-only><Content /></div>}
+      <div class="translation-note" data-secondary-only>
+        <LocalizedText primary="" translations={fieldTranslations(props.entry.data.translations, 'bodyNote')} />
+      </div>
     </article>
   )}
   {props.kind === 'writing-index' && (
     <>
-      <header class="route-header"><h1>Writing</h1></header>
+      <header class="route-header">
+        <LocalizedText as="h1" primary={primaryCopy.labels.writing} translations={labelTranslations(site, 'writing')} />
+      </header>
       <ol class="entry-list">
         {[...props.entries].sort((a, b) => b.data.publishedAt.valueOf() - a.data.publishedAt.valueOf()).map((item) => (
-          <li><a href={sitePath(`writing/${item.id}/`)}>{item.data.title}</a><p>{item.data.description}</p></li>
+          <li>
+            <a href={sitePath(`writing/${item.id}/`)}>
+              <LocalizedText primary={item.data.title} translations={fieldTranslations(item.data.translations, 'title')} />
+            </a>
+            <LocalizedText as="p" primary={item.data.description} translations={fieldTranslations(item.data.translations, 'description')} />
+          </li>
         ))}
       </ol>
     </>
   )}
   {props.kind === 'writing' && (
     <article>
-      <header class="route-header"><h1>{props.entry.data.title}</h1><p>{props.entry.data.description}</p></header>
-      {Content && <div class="prose"><Content /></div>}
+      <header class="route-header">
+        <LocalizedText as="h1" primary={props.entry.data.title} translations={fieldTranslations(props.entry.data.translations, 'title')} />
+        <LocalizedText as="p" primary={props.entry.data.description} translations={fieldTranslations(props.entry.data.translations, 'description')} />
+      </header>
+      {Content && <div class="prose" data-primary-only><Content /></div>}
+      <div class="translation-note" data-secondary-only>
+        <LocalizedText primary="" translations={fieldTranslations(props.entry.data.translations, 'bodyNote')} />
+      </div>
     </article>
   )}
   {props.kind === 'about' && (
-    <article><header class="route-header"><h1>About</h1><p>{site.about}</p></header></article>
+    <article>
+      <header class="route-header">
+        <LocalizedText as="h1" primary={primaryCopy.labels.about} translations={labelTranslations(site, 'about')} />
+        <LocalizedText as="p" primary={primaryCopy.about} translations={siteCopyTranslations(site, 'about')} />
+      </header>
+    </article>
   )}
 </BaseLayout>

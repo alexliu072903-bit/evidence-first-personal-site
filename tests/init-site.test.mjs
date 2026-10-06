@@ -9,6 +9,7 @@ import { fileURLToPath } from 'node:url';
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 const init = path.join(root, 'scripts', 'init-site.mjs');
 const contract = path.join(root, 'tests', 'fixtures', 'contract.json');
+const bilingualContract = path.join(root, 'tests', 'fixtures', 'bilingual-contract.json');
 
 test('initializes only the declared foundation contract', async () => {
   const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-'));
@@ -18,7 +19,26 @@ test('initializes only the declared foundation contract', async () => {
   assert.match(generated, /"projects": true/);
   assert.match(generated, /"writing": false/);
   assert.match(generated, /"skin": null/);
+  assert.match(generated, /"copy"/);
   assert.doesNotMatch(generated, /Alex|AirJelly|Cairn/);
+});
+
+test('requires complete site copy for every enabled language', async () => {
+  const parent = await mkdtemp(path.join(os.tmpdir(), 'site-foundation-bilingual-'));
+  const output = path.join(parent, 'site');
+  execFileSync(process.execPath, [init, '--contract', bilingualContract, '--output', output]);
+  const generated = await readFile(path.join(output, 'src', 'site.config.mjs'), 'utf8');
+  assert.match(generated, /"zh-CN"/);
+  assert.match(generated, /"跳到正文"/);
+
+  const incomplete = JSON.parse(await readFile(bilingualContract, 'utf8'));
+  delete incomplete.translations['zh-CN'].labels.currentState;
+  const incompletePath = path.join(parent, 'incomplete.json');
+  await writeFile(incompletePath, JSON.stringify(incomplete));
+  const invalidOutput = path.join(parent, 'invalid-site');
+  const result = spawnSync(process.execPath, [init, '--contract', incompletePath, '--output', invalidOutput], { encoding: 'utf8' });
+  assert.notEqual(result.status, 0);
+  assert.match(result.stderr, /translations\.zh-CN\.labels\.currentState is required/);
 });
 
 test('refuses to overwrite a non-empty directory', async () => {

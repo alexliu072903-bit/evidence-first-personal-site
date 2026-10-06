@@ -1,9 +1,16 @@
 ---
 import { sitePath } from '../lib/paths';
-interface Props { src: string; alt: string; caption?: string }
-const { src, alt, caption } = Astro.props;
+interface Props { src: string; alt: string; altTranslations?: Record<string, string | undefined>; caption?: string }
+const { src, alt, altTranslations = {}, caption } = Astro.props;
 ---
 <figure class="evidence-asset">
-  <img src={src.startsWith('http') ? src : sitePath(src)} alt={alt} loading="lazy" />
+  <img
+    src={src.startsWith('http') ? src : sitePath(src)}
+    alt={alt}
+    loading="lazy"
+    data-localized-attribute="alt"
+    data-attribute-primary={alt}
+    data-attribute-translations={JSON.stringify(altTranslations)}
+  />
   {caption && <figcaption>{caption}</figcaption>}
 </figure>

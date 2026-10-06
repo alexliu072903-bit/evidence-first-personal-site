@@ -135,8 +135,8 @@ references/bilingual.md
 references/site-foundation.md + assets/site-foundation/
   从已确认 Site Contract 初始化的、无品牌视觉的 Astro Foundation
 
-scripts/init-site.mjs + scripts/verify-site.mjs
-  确定性的初始化与核心产物验证
+scripts/init-site.mjs + scripts/verify-site.mjs + scripts/browser-qa.mjs
+  确定性的初始化、核心产物验证与多宽度浏览器 QA
 ```
 
 ## 发布前的最低检查

@@ -145,8 +145,8 @@ references/default-style.md + assets/haze/
 references/site-foundation.md + assets/site-foundation/
   A skin-free Astro foundation initialized from an approved site contract
 
-scripts/init-site.mjs + scripts/verify-site.mjs
-  Deterministic initialization and core artifact verification
+scripts/init-site.mjs + scripts/verify-site.mjs + scripts/browser-qa.mjs
+  Deterministic initialization, artifact verification, and multi-width browser QA
 ```
 
 ## Checks before publishing

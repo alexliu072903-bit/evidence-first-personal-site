@@ -6,6 +6,12 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
+const labelKeys = [
+  'projects', 'writing', 'about', 'resume', 'skipToContent', 'primaryNavigation',
+  'siteSections', 'changeLanguage', 'situation', 'contribution', 'currentState',
+  'notFound', 'notFoundDescription', 'sourceOpen', 'sourcePrivate', 'sourceMixed',
+  'sourceNotApplicable',
+];
 
 function argument(name) {
   const index = process.argv.indexOf(name);
@@ -32,6 +38,18 @@ function validateContract(contract) {
     if (typeof contract?.modules?.[module] !== 'boolean') errors.push(`modules.${module} must be true or false`);
   }
   if (contract?.modules?.about && !contract?.about?.trim()) errors.push('about is required when modules.about is true');
+  for (const key of labelKeys) {
+    if (!contract?.labels?.[key]?.trim()) errors.push(`labels.${key} is required`);
+  }
+  for (const language of contract?.languages ?? []) {
+    if (language === contract.primaryLanguage) continue;
+    const translation = contract?.translations?.[language];
+    if (!translation?.description?.trim()) errors.push(`translations.${language}.description is required`);
+    if (contract?.modules?.about && !translation?.about?.trim()) errors.push(`translations.${language}.about is required`);
+    for (const key of labelKeys) {
+      if (!translation?.labels?.[key]?.trim()) errors.push(`translations.${language}.labels.${key} is required`);
+    }
+  }
   if (!['local', 'github-pages'].includes(contract?.deployment?.mode)) {
     errors.push('deployment.mode must be local or github-pages');
   }
@@ -73,12 +91,24 @@ if (!contractPath || !outputPath) {
         await mkdir(path.join(absoluteOutput, 'src', 'content', 'writing'), { recursive: true });
         const normalized = {
           name: contract.name.trim(),
-          description: contract.description.trim(),
           primaryLanguage: contract.primaryLanguage,
           languages: [...new Set(contract.languages)],
           modules: contract.modules,
-          about: contract.modules.about ? contract.about.trim() : null,
           resume: contract.resume ?? null,
+          copy: {
+            [contract.primaryLanguage]: {
+              description: contract.description.trim(),
+              about: contract.modules.about ? contract.about.trim() : null,
+              labels: contract.labels,
+            },
+            ...Object.fromEntries(
+              Object.entries(contract.translations ?? {}).map(([language, translation]) => [language, {
+                description: translation.description.trim(),
+                about: contract.modules.about ? translation.about.trim() : null,
+                labels: translation.labels,
+              }]),
+            ),
+          },
           deployment: {
             mode: contract.deployment.mode,
             site: contract.deployment.site ?? 'http://localhost:4321',

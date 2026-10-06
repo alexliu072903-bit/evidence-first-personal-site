@@ -1,5 +1,6 @@
 ---
-interface Props { value: string }
-const { value } = Astro.props;
+import LocalizedText from './LocalizedText.astro';
+interface Props { value: string; translations?: Record<string, string | undefined> }
+const { value, translations = {} } = Astro.props;
 ---
-<span class="fact-label">{value}</span>
+<span class="fact-label"><LocalizedText primary={value} translations={translations} /></span>
